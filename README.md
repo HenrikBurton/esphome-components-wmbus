@@ -1,3 +1,5 @@
+# Fork to add support for the SX1262-HF RF device
+
 # Szczepan's esphome custom components
 
 This repository contains a collection of my custom components
