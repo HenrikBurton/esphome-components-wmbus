@@ -25,6 +25,8 @@ from esphome.const import (
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_RETAIN,
+    CONF_RESET_PIN,
+    CONF_DEVICE,
 )
 
 from esphome.const import SOURCE_FILE_EXTENSIONS
@@ -100,6 +102,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_CS_PIN,         default=2):       pins.internal_gpio_output_pin_schema,
     cv.Optional(CONF_GDO0_PIN,       default=5):       pins.internal_gpio_input_pin_schema,
     cv.Optional(CONF_GDO2_PIN,       default=4):       pins.internal_gpio_input_pin_schema,
+    cv.Optional(CONF_RESET_PIN,      default=3):       pins.internal:gpio_output_in_schema,
     cv.Optional(CONF_LED_PIN):                         pins.gpio_output_pin_schema,
     cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
     cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
@@ -118,6 +121,7 @@ def safe_ip(ip):
 async def to_code(config):
     var_adv = cg.new_Pvariable(config[CONF_INFO_COMP_ID])
     await cg.register_component(var_adv, {})
+    await spi.register_spi_device(var, config)
 
     if (config.get(CONF_MQTT_ID) and config.get(CONF_MQTT)):
         print(color(Fore.RED, "Only one MQTT can be configured!"))
@@ -126,14 +130,15 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
-    mosi = await cg.gpio_pin_expression(config[CONF_MOSI_PIN])
-    miso = await cg.gpio_pin_expression(config[CONF_MISO_PIN])
-    clk  = await cg.gpio_pin_expression(config[CONF_CLK_PIN])
-    cs   = await cg.gpio_pin_expression(config[CONF_CS_PIN])
-    gdo0 = await cg.gpio_pin_expression(config[CONF_GDO0_PIN])
-    gdo2 = await cg.gpio_pin_expression(config[CONF_GDO2_PIN])
+    mosi  = await cg.gpio_pin_expression(config[CONF_MOSI_PIN])
+    miso  = await cg.gpio_pin_expression(config[CONF_MISO_PIN])
+    clk   = await cg.gpio_pin_expression(config[CONF_CLK_PIN])
+    cs    = await cg.gpio_pin_expression(config[CONF_CS_PIN])
+    gdo0  = await cg.gpio_pin_expression(config[CONF_GDO0_PIN])
+    gdo2  = await cg.gpio_pin_expression(config[CONF_GDO2_PIN])
+    reset = await cg.gpio_pin_expression(config[CONF_RESET_PIN])
 
-    cg.add(var.add_cc1101(mosi, miso, clk, cs, gdo0, gdo2, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
+    cg.add(var.add_sx1262(mosi, miso, clk, cs, gdo0, gdo2, reset, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
     time = await cg.get_variable(config[CONF_TIME_ID])
     cg.add(var.set_time(time))
@@ -174,9 +179,6 @@ async def to_code(config):
         led_pin = await cg.gpio_pin_expression(config[CONF_LED_PIN])
         cg.add(var.set_led_pin(led_pin))
         cg.add(var.set_led_blink_time(config[CONF_LED_BLINK_TIME].total_milliseconds))
-
-    cg.add_library("SPI", None)
-    cg.add_library("LSatan/SmartRC-CC1101-Driver-Lib", "2.5.7")
 
     cg.add_platformio_option("build_src_filter", ["+<*>", "-<.git/>", "-<.svn/>"])
 
