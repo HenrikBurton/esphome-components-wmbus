@@ -61,6 +61,7 @@ namespace wmbus {
         case WAIT_FOR_SYNC:
           if (digitalRead(this->gdo2)) {
             if (getIrqStatus() & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
+                clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID;)
                 rxLoop.state = WAIT_FOR_DATA;
                 sync_time_ = millis();
             }
@@ -70,10 +71,16 @@ namespace wmbus {
         // waiting for enough data in Rx FIFO buffer
         case WAIT_FOR_DATA:
           if (digitalRead(this->gdo0) && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
+            uint8_t bytesInFIFO = getRxPayloadLength();
+            if (bytesInFIFO < 3) {
+                rxLoop.state = INIT_RX;
+                return task();
+            }
             uint8_t preamble[2];
             // Read the 3 first bytes,
-//            ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.pByteIndex, 3);
+            readBuffer(rxLoop.pByteIndex, 0, 3);
             rxLoop.bytesRx = 3;
+            bytesInFIFO = bytesInFIFO - 3;
             const uint8_t *currentByte = rxLoop.pByteIndex;
             // Mode C
             if (*currentByte == WMBUS_MODE_C_PREAMBLE) {
@@ -96,7 +103,7 @@ namespace wmbus {
               // Unknown type, reinit loop
               else {
                 rxLoop.state = INIT_RX;
-                return false;
+                return task();
               }
               // don't include C "preamble"
               *(rxLoop.pByteIndex) = rxLoop.lengthField;
@@ -114,11 +121,11 @@ namespace wmbus {
             // Unknown mode, reinit loop
             else {
               rxLoop.state = INIT_RX;
-              return false;
+              return task();
             }
 
             rxLoop.bytesLeft = rxLoop.length - 3;
-
+/*
             if (rxLoop.length < MAX_FIXED_LENGTH) {
               // Set CC1101 into length mode
               ELECHOUSE_cc1101.SpiWriteReg(CC1101_PKTLEN, (uint8_t)rxLoop.length);
@@ -129,25 +136,28 @@ namespace wmbus {
               // Set CC1101 into infinite mode
               ELECHOUSE_cc1101.SpiWriteReg(CC1101_PKTLEN, (uint8_t)(rxLoop.length%MAX_FIXED_LENGTH));
             }
-
+*/
             rxLoop.state = READ_DATA;
             max_wait_time_ += extra_time_;
 
-            ELECHOUSE_cc1101.SpiWriteReg(CC1101_FIFOTHR, RX_FIFO_THRESHOLD);
+            clearIrqStatus(RADIOLIB_SX126X_IRQ_RX_DONE);
+//            ELECHOUSE_cc1101.SpiWriteReg(CC1101_FIFOTHR, RX_FIFO_THRESHOLD);
+/*            return task();
           }
           break;
 
         // waiting for more data in Rx FIFO buffer
         case READ_DATA:
-          if (digitalRead(this->gdo0)) { // assert when Rx FIFO buffer threshold reached
+          if (digitalRead(this->gdo0) && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
             if ((rxLoop.bytesLeft < MAX_FIXED_LENGTH) && (rxLoop.cc1101Mode == INFINITE)) {
-              ELECHOUSE_cc1101.SpiWriteReg(CC1101_PKTCTRL0, FIXED_PACKET_LENGTH);
+//              ELECHOUSE_cc1101.SpiWriteReg(CC1101_PKTCTRL0, FIXED_PACKET_LENGTH);
               rxLoop.cc1101Mode = FIXED;
             }
             // Do not empty the Rx FIFO (See the CC1101 SWRZ020E errata note)
             uint8_t bytesInFIFO = ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x7F;
             ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.pByteIndex, bytesInFIFO - 1);
-
+*/
+            readBuffer(rxLoop.pByteIndex, rxLoop.pByteIndex, bytesInFIFO);
             rxLoop.bytesLeft  -= (bytesInFIFO - 1);
             rxLoop.pByteIndex += (bytesInFIFO - 1);
             rxLoop.bytesRx    += (bytesInFIFO - 1);
@@ -156,15 +166,17 @@ namespace wmbus {
           break;
       }
 
-      uint8_t overfl = ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x80;
+      uint8_t overfl = 0;// ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x80;
       // end of packet in length mode
       if ((!overfl) && (!digitalRead(gdo2))  && (rxLoop.state > WAIT_FOR_DATA)) {
         ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.pByteIndex, (uint8_t)rxLoop.bytesLeft);
         rxLoop.bytesRx += rxLoop.bytesLeft;
         data_in.length  = rxLoop.bytesRx;
-        this->returnFrame.rssi  = (int8_t)ELECHOUSE_cc1101.getRssi();
-        this->returnFrame.lqi   = (uint8_t)ELECHOUSE_cc1101.getLqi();
-        ESP_LOGV(TAG, "Have %d bytes from CC1101 Rx, RSSI: %d dBm LQI: %d", rxLoop.bytesRx, this->returnFrame.rssi, this->returnFrame.lqi);
+//        this->returnFrame.rssi  = (int8_t)ELECHOUSE_cc1101.getRssi();
+//        this->returnFrame.lqi   = (uint8_t)ELECHOUSE_cc1101.getLqi();
+        this->returnFrame.rssi = getRssiInst();
+        this->returnFrame.lqi = 0; // find a measur to put here
+        ESP_LOGV(TAG, "Have %d bytes from SX1262 Rx, RSSI: %d dBm LQI: %d", rxLoop.bytesRx, this->returnFrame.rssi, this->returnFrame.lqi);
         if (rxLoop.length != data_in.length) {
           ESP_LOGE(TAG, "Length problem: req(%d) != rx(%d)", rxLoop.length, data_in.length);
         }
@@ -251,14 +263,14 @@ namespace wmbus {
 
   uint16_t RxLoop::getStatus() {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_STATUS, 0x00 };
-    uint8_t respons[] = { 0x00, 0x00 }
+    uint8_t respons[2];
             
     // Wait until device is not BUSY
     while(this->busy_pin_->digital_read()){
         delay(1);
     }
     this->delegate_->begin_transaction();
-    this->delegate_->transfer(command, response, sizeof(command));
+    this->delegate_->transfer(command, respons, sizeof(command));
     this->delegate_->end_transaction();
 
     return((uint16_t) respons[1]);
@@ -266,14 +278,14 @@ namespace wmbus {
   
   uint16_t RxLoop::getIrqStatus() {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_IRQ_STATUS, 0x00, 0x00, 0x00 };
-    uint8_t respons[] = { 0x00, 0x00, 0x00, 0x00 };
+    uint8_t respons[4];
 
     // Wait until device is not BUSY
     while(this->busy_pin_->digital_read()){
         delay(1);
     }
     this->delegate_->begin_transaction();
-    this->delegate_->transfer(command, response, sizeof(command));
+    this->delegate_->transfer(command, respons, sizeof(command));
     this->delegate_->end_transaction();
 
     return((uint16_t)(respons[2] << 8) | respons[3]);
@@ -290,9 +302,29 @@ namespace wmbus {
     this->delegate_->end_transaction();
   }
   
+  uint8_t RxLoop::getRxPayloadLength() {
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RX_BUFFER_STATUS, 0x00, 0x00 };
+    uint8_t respons[3];
+
+    sx1262command(command, respons, sizeof(command));
+    return(respons[2]);
+  }
+
   void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint8_t length) {
-    buffer[0] = RADIOLIB_SX126X_CMD_READ_BUFFER;
-    buffer[1] =
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_READ_BUFFER, offset, 0x00 };
+
+    this->delegate_->begin_transaction();
+    this->delegate_->write_array(command, sizeof(command));
+    this->delegate_->read_array(buffer, length < MAX_FIXED_LENGTH ? length : MAX_FIXED_LENGTH);
+    this->delegate_->end_transaction();
+  }
+  
+  uint8_t RxLoop::GetRssiInst() {
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RSSI_INST, 0x00, 0x00 };
+    uint8_t respons[3];
+
+    sx1262command(command, respons, sizeof(command));
+    return(respons[2] / 2);
   }
 
   void RxLoop::standby(uint8_t mode) {
