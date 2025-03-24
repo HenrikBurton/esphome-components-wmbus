@@ -122,7 +122,6 @@ def safe_ip(ip):
 async def to_code(config):
     var_adv = cg.new_Pvariable(config[CONF_INFO_COMP_ID])
     await cg.register_component(var_adv, {})
-    await spi.register_spi_device(var, config)
 
     if (config.get(CONF_MQTT_ID) and config.get(CONF_MQTT)):
         print(color(Fore.RED, "Only one MQTT can be configured!"))
@@ -130,6 +129,7 @@ async def to_code(config):
 
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
+    await spi.register_spi_device(var, config)
 
     mosi  = await cg.gpio_pin_expression(config[CONF_MOSI_PIN])
     miso  = await cg.gpio_pin_expression(config[CONF_MISO_PIN])
