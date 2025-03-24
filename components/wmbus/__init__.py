@@ -134,7 +134,7 @@ async def to_code(config):
     mosi  = await cg.gpio_pin_expression(config[CONF_MOSI_PIN])
     miso  = await cg.gpio_pin_expression(config[CONF_MISO_PIN])
     clk   = await cg.gpio_pin_expression(config[CONF_CLK_PIN])
-    cs    = await cg.gpio_pin_expression(config[CONF_CS_PIN])
+    cs    = 0 #await cg.gpio_pin_expression(config[CONF_CS_PIN])
     gdo0  = await cg.gpio_pin_expression(config[CONF_GDO0_PIN])
     gdo2  = await cg.gpio_pin_expression(config[CONF_GDO2_PIN])
     reset = await cg.gpio_pin_expression(config[CONF_RESET_PIN])
