@@ -532,8 +532,7 @@ namespace wmbus {
 
   class RxLoop {
     public:
-      bool init(uint8_t mosi, uint8_t miso, uint8_t clk, uint8_t cs,
-                uint8_t gdo0, uint8_t gdo2, uint8_t reset, float freq, bool syncMode);
+      bool init(uint8_t gdo0, uint8_t gdo2, uint8_t reset, float freq, bool syncMode);
       bool task();
       WMbusFrame get_frame();
 
