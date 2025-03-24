@@ -35,10 +35,8 @@ namespace wmbus {
       this->led_pin_->digital_write(false);
       this->led_on_ = false;
     }
-    if (!rf_mbus_.init(this->spi_conf_.mosi->get_pin(), this->spi_conf_.miso->get_pin(),
-                       this->spi_conf_.clk->get_pin(),  this->spi_conf_.cs->get_pin(),
-                       this->spi_conf_.gdo0->get_pin(), this->spi_conf_.gdo2->get_pin(),
-                       this->spi_conf_.reset, this->frequency_, this->sync_mode_)) {
+    if (!rf_mbus_.init(this->spi_conf_.gdo0->get_pin(), this->spi_conf_.gdo2->get_pin(),
+                       this->spi_conf_.reset-get_pin(), this->frequency_, this->sync_mode_)) {
       this->mark_failed();
       ESP_LOGE(TAG, "RF chip initialization failed");
       return;
@@ -355,10 +353,10 @@ namespace wmbus {
 #ifdef USE_ESP32
     ESP_LOGCONFIG(TAG, "  Chip ID: %012llX", ESP.getEfuseMac());
 #endif
-    ESP_LOGCONFIG(TAG, "  CC1101 frequency: %3.3f MHz", this->frequency_);
-    ESP_LOGCONFIG(TAG, "  CC1101 SPI bus:");
+    ESP_LOGCONFIG(TAG, "  SX1262 frequency: %3.3f MHz", this->frequency_);
+    ESP_LOGCONFIG(TAG, "  SX1262 SPI bus:");
     if (this->is_failed()) {
-      ESP_LOGE(TAG, "   Check connection to CC1101!");
+      ESP_LOGE(TAG, "   Check connection to SX1262!");
     }
     LOG_PIN("    MOSI Pin: ", this->spi_conf_.mosi);
     LOG_PIN("    MISO Pin: ", this->spi_conf_.miso);

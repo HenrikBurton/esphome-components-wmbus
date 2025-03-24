@@ -139,7 +139,7 @@ async def to_code(config):
     gdo2  = await cg.gpio_pin_expression(config[CONF_GDO2_PIN])
     reset = await cg.gpio_pin_expression(config[CONF_RESET_PIN])
 
-    cg.add(var.add_sx1262(mosi, miso, clk, cs, gdo0, gdo2, reset, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
+    cg.add(var.add_sx1262(gdo0, gdo2, reset, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
     time = await cg.get_variable(config[CONF_TIME_ID])
     cg.add(var.set_time(time))
