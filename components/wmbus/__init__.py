@@ -112,7 +112,8 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_FREQUENCY,      default=868.950): cv.float_range(min=300, max=928),
     cv.Optional(CONF_SYNC_MODE,      default=False):   cv.boolean,
     cv.Optional(CONF_MQTT):                            cv.ensure_schema(WMBUS_MQTT_SCHEMA),
-}).extend(spi.spi_device_schema(cs_pin_required=True))
+}).extend(cv.COMPONENT_SCHEMA)
+  .extend(spi.spi_device_schema(cs_pin_required=False))
 
 def safe_ip(ip):
     if ip is None:
