@@ -1,4 +1,4 @@
-
+#include "rf_sx1262.h"
 
 namespace esphome {
 namespace wmbus {
