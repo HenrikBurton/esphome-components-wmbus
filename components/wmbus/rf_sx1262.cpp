@@ -266,7 +266,7 @@ namespace wmbus {
     uint8_t respons[2];
             
     // Wait until device is not BUSY
-    while(this->busy_pin_->digital_read()){
+    while(digital_read(gdo0)){
         delay(1);
     }
     this->delegate_->begin_transaction();
@@ -281,7 +281,7 @@ namespace wmbus {
     uint8_t respons[4];
 
     // Wait until device is not BUSY
-    while(this->busy_pin_->digital_read()){
+    while(digital_read(gdo0)){
         delay(1);
     }
     this->delegate_->begin_transaction();
@@ -294,7 +294,7 @@ namespace wmbus {
   void RxLoop::sx1262command(uint8_t *command, uint32_t length) {
             
     // Wait until device is not BUSY
-    while(this->busy_pin_->digital_read()){
+    while(digital_read(gdo0)){
       delay(1);
     }
     this->delegate_->begin_transaction();
