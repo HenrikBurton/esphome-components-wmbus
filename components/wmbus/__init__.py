@@ -49,7 +49,7 @@ CONF_WIFI_REF = "wmbus_wifi_id"
 
 CODEOWNERS = ["@SzczepanLeon"]
 
-DEPENDENCIES = ["time"]
+DEPENDENCIES = ["time", "spi"]
 AUTO_LOAD = ["sensor", "text_sensor"]
 
 wmbus_ns = cg.esphome_ns.namespace('wmbus')
@@ -112,7 +112,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_FREQUENCY,      default=868.950): cv.float_range(min=300, max=928),
     cv.Optional(CONF_SYNC_MODE,      default=False):   cv.boolean,
     cv.Optional(CONF_MQTT):                            cv.ensure_schema(WMBUS_MQTT_SCHEMA),
-})
+}).extend(spi.spi_device_schema(cs_pin_required=True))
 
 def safe_ip(ip):
     if ip is None:
