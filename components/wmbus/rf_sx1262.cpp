@@ -173,7 +173,7 @@ namespace wmbus {
         data_in.length  = rxLoop.bytesRx;
 //        this->returnFrame.rssi  = (int8_t)ELECHOUSE_cc1101.getRssi();
 //        this->returnFrame.lqi   = (uint8_t)ELECHOUSE_cc1101.getLqi();
-        this->returnFrame.rssi = getRssiInst();
+        this->returnFrame.rssi = getRssiInst(); 
         this->returnFrame.lqi = 0; // find a measur to put here
         ESP_LOGV(TAG, "Have %d bytes from SX1262 Rx, RSSI: %d dBm LQI: %d", rxLoop.bytesRx, this->returnFrame.rssi, this->returnFrame.lqi);
         if (rxLoop.length != data_in.length) {
