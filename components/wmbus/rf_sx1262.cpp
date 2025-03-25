@@ -168,7 +168,7 @@ namespace wmbus {
       uint8_t overfl = 0;// ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x80;
       // end of packet in length mode
       if ((!overfl) && (!this->gdo2->digital_read())  && (rxLoop.state > WAIT_FOR_DATA)) {
-        ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.bytesRx, rxLoop.bytesLeft);
+//        ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.bytesRx, rxLoop.bytesLeft);
         rxLoop.bytesRx += rxLoop.bytesLeft;
         data_in.length  = rxLoop.bytesRx;
 //        this->returnFrame.rssi  = (int8_t)ELECHOUSE_cc1101.getRssi();
@@ -215,7 +215,7 @@ namespace wmbus {
     sync_time_ = millis();
     max_wait_time_ = extra_time_;
 
-    setRx();
+    setRx(0x000000);
 
     // Initialize RX info variable
     rxLoop.lengthField = 0;              // Length Field in the wM-Bus packet
@@ -318,7 +318,7 @@ namespace wmbus {
     this->delegate_->end_transaction();
   }
   
-  uint8_t RxLoop::GetRssiInst() {
+  uint8_t RxLoop::getRssiInst() {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RSSI_INST, 0x00, 0x00 };
     uint8_t respons[3];
 
