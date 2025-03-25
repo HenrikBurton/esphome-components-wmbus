@@ -35,7 +35,7 @@ namespace wmbus {
       this->led_pin_->digital_write(false);
       this->led_on_ = false;
     }
-    if (!rf_mbus_.init(this->spi_conf_.gdo0->get_pin(), this->spi_conf_.gdo2->get_pin(),
+    if (!rf_mbus_.init(this->spi_conf_.gdo0, this->spi_conf_.gdo2->get_pin(),
                        this->spi_conf_.reset->get_pin(), this->frequency_, this->sync_mode_)) {
       this->mark_failed();
       ESP_LOGE(TAG, "RF chip initialization failed");
