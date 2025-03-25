@@ -293,7 +293,7 @@ namespace wmbus {
   void RxLoop::sx1262command(uint8_t *command, uint32_t length) {
             
     // Wait until device is not BUSY
-    while(digital_read(gdo0)){
+    while(this->gdo0->digital_read()){
       delay(1);
     }
     this->delegate_->begin_transaction();
@@ -322,7 +322,7 @@ namespace wmbus {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RSSI_INST, 0x00, 0x00 };
     uint8_t respons[3];
 
-    sx1262command(command, respons, sizeof(command));
+    readBuffer(command, respons, sizeof(command));
     return(respons[2] / 2);
   }
 
