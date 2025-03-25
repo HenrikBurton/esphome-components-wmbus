@@ -168,7 +168,7 @@ namespace wmbus {
       uint8_t overfl = 0;// ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x80;
       // end of packet in length mode
       if ((!overfl) && (!this->gdo2->digital_read())  && (rxLoop.state > WAIT_FOR_DATA)) {
-        ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.pByteIndex, (uint8_t)rxLoop.bytesLeft);
+        ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.bytesRx, rxLoop.bytesLeft);
         rxLoop.bytesRx += rxLoop.bytesLeft;
         data_in.length  = rxLoop.bytesRx;
 //        this->returnFrame.rssi  = (int8_t)ELECHOUSE_cc1101.getRssi();
@@ -309,7 +309,7 @@ namespace wmbus {
     return(respons[2]);
   }
 
-  void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint8_t length) {
+  void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint16_t length) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_READ_BUFFER, offset, 0x00 };
 
     this->delegate_->begin_transaction();
