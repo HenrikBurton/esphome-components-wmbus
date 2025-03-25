@@ -16,7 +16,7 @@ namespace wmbus {
     this->reset->setup();
     this->spi_setup();
 
-    reset();
+    resetDevice();
     standby(RADIOLIB_SX126X_STANDBY_RC);
     setPacketType(RADIOLIB_SX126X_PACKET_TYPE_GFSK);
     setRfFrequency(freq);
@@ -251,7 +251,7 @@ namespace wmbus {
     return true; // this will indicate we just have re-started Rx
   }
 
-  void RxLoop::reset() {
+  void RxLoop::resetDevice() {
     // Reset device
     this->reset_pin_->digital_write(true);
     delay(2);
