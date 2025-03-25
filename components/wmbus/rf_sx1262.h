@@ -533,7 +533,7 @@ namespace wmbus {
 
   class RxLoop {
     public:
-      bool init(GPIOPin *gdo0, uint8_t gdo2, uint8_t reset, float freq, bool syncMode);
+      bool init(GPIOPin *gdo0, GPIOPin *gdo2, GPIOPin *reset, float freq, bool syncMode);
       bool task();
       WMbusFrame get_frame();
 
@@ -543,8 +543,8 @@ namespace wmbus {
       bool syncMode{false};
 
       GPIOPin *gdo0{0};
-      uint8_t gdo2{0};
-      uint8_t reset{0};
+      GPIOPin *gdo2{0};
+      GPIOPin *reset{0};
 
       WMbusData data_in{0}; // Data from Physical layer decoded to bytes
       WMbusFrame returnFrame;
