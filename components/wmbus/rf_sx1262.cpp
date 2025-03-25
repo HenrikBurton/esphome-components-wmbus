@@ -156,7 +156,7 @@ namespace wmbus {
             uint8_t bytesInFIFO = ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x7F;
             ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.pByteIndex, bytesInFIFO - 1);
 */
-            readBuffer(rxLoop.pByteIndex, rxLoop.pByteIndex, bytesInFIFO);
+            readBuffer(rxLoop.pByteIndex, rxLoop.bytesRx, bytesInFIFO);
             rxLoop.bytesLeft  -= (bytesInFIFO - 1);
             rxLoop.pByteIndex += (bytesInFIFO - 1);
             rxLoop.bytesRx    += (bytesInFIFO - 1);
