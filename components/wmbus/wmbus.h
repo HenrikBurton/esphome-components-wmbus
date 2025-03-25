@@ -7,16 +7,6 @@
 #include "esphome/components/network/ip_address.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
-#ifdef USE_WMBUS_MQTT
-#include <PubSubClient.h>
-#elif defined(USE_MQTT)
-#include "esphome/components/mqtt/mqtt_client.h"
-#endif
-#ifdef USE_ETHERNET
-#include "esphome/components/ethernet/ethernet_component.h"
-#elif defined(USE_WIFI)
-#include "esphome/components/wifi/wifi_component.h"
-#endif
 #include "esphome/components/time/real_time_clock.h"
 
 #include <map>
@@ -28,12 +18,6 @@
 #include "crc.h"
 
 #include "utils.h"
-/*
-#ifdef USE_WIFI
-#include <WiFiClient.h>
-#include <WiFiUdp.h>
-#endif
-*/
 
 namespace esphome {
 namespace wmbus {
@@ -125,23 +109,9 @@ namespace wmbus {
           this->wmbus_listeners_[meter_id]->add_sensor(field, sensor);
         }
       }
-#ifdef USE_ETHERNET
-      void set_eth(ethernet::EthernetComponent *eth_component) { this->net_component_ = eth_component; }
-#elif defined(USE_WIFI)
-      void set_wifi(wifi::WiFiComponent *wifi_component) { this->net_component_ = wifi_component; }
-#endif
+
       void set_time(time::RealTimeClock *time) { this->time_ = time; }
-#ifdef USE_WMBUS_MQTT
-      void set_mqtt(const std::string name,
-                    const std::string password,
-                    const network::IPAddress ip,
-                    const uint16_t port,
-                    const bool retained) {
-        this->mqtt_ = new MqttClient{name, password, ip, port, retained};
-      }
-#elif defined(USE_MQTT)
-      void set_mqtt(mqtt::MQTTClientComponent *mqtt_client) { this->mqtt_client_ = mqtt_client; }
-#endif
+
       void set_log_all(bool log_all) { this->log_all_ = log_all; }
       void add_client(const std::string name,
                       const network::IPAddress ip,
@@ -166,25 +136,12 @@ namespace wmbus {
       bool sync_mode_{false};
       std::map<uint32_t, WMBusListener *> wmbus_listeners_{};
       std::vector<Client> clients_{};
-      WiFiClient tcp_client_;
-      WiFiUDP udp_client_;
       time::RealTimeClock *time_{nullptr};
       uint32_t led_blink_time_{0};
       uint32_t led_on_millis_{0};
       bool led_on_{false};
       bool log_all_{false};
       RxLoop rf_mbus_;
-#ifdef USE_ETHERNET
-      ethernet::EthernetComponent *net_component_{nullptr};
-#elif defined(USE_WIFI)
-      wifi::WiFiComponent *net_component_{nullptr};
-#endif
-#ifdef USE_WMBUS_MQTT
-      PubSubClient mqtt_client_;
-      MqttClient *mqtt_{nullptr};
-#elif defined(USE_MQTT)
-      mqtt::MQTTClientComponent *mqtt_client_{nullptr};
-#endif
       time_t frame_timestamp_;
   };
 
