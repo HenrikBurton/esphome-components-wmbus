@@ -58,7 +58,7 @@ namespace wmbus {
 
         // RX active, waiting for SYNC
         case WAIT_FOR_SYNC:
-          if (digital_read(this->gdo2)) {
+          if (this->gdo2->digital_read()) {
             if (getIrqStatus() & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
                 clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
                 rxLoop.state = WAIT_FOR_DATA;
@@ -69,7 +69,7 @@ namespace wmbus {
 
         // waiting for enough data in Rx FIFO buffer
         case WAIT_FOR_DATA:
-          if (digital_read(this->gdo2) && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
+          if (this->gdo2->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
             uint8_t bytesInFIFO = getRxPayloadLength();
             if (bytesInFIFO < 3) {
                 rxLoop.state = INIT_RX;
@@ -167,7 +167,7 @@ namespace wmbus {
 
       uint8_t overfl = 0;// ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x80;
       // end of packet in length mode
-      if ((!overfl) && (!digital_read(this->gdo2))  && (rxLoop.state > WAIT_FOR_DATA)) {
+      if ((!overfl) && (!this->gdo2->digital_read())  && (rxLoop.state > WAIT_FOR_DATA)) {
         ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.pByteIndex, (uint8_t)rxLoop.bytesLeft);
         rxLoop.bytesRx += rxLoop.bytesLeft;
         data_in.length  = rxLoop.bytesRx;
