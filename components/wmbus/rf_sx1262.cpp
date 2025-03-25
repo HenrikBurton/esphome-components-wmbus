@@ -5,7 +5,7 @@ namespace wmbus {
 
   static const char *TAG = "rxLoop";
 
-  bool RxLoop::init(GPIOPin gdo0, uint8_t gdo2, uint8_t reset, float freq, bool syncMode) {
+  bool RxLoop::init(GPIOPin *gdo0, uint8_t gdo2, uint8_t reset, float freq, bool syncMode) {
     bool retVal = false;
     this->syncMode = syncMode;
    // this->gdo0 = gdo0;
