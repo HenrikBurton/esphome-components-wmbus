@@ -289,6 +289,20 @@ namespace wmbus {
 
     return((uint16_t)(respons[2] << 8) | respons[3]);
   }
+  
+  uint8_t RxLoop::getRssiInst() {
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RSSI_INST, 0x00, 0x00 };
+    uint8_t respons[3];
+
+    // Wait until device is not BUSY
+    while(this->gdo0->digital_read()){
+        delay(1);
+    }
+    this->delegate_->begin_transaction();
+    this->delegate_->transfer(command, respons, sizeof(command));
+    this->delegate_->end_transaction();
+    return(respons[2] / 2);
+  }
 
   void RxLoop::sx1262command(uint8_t *command, uint32_t length) {
             
@@ -300,14 +314,6 @@ namespace wmbus {
     this->delegate_->write_array(command, length);
     this->delegate_->end_transaction();
   }
-  
-  uint8_t RxLoop::getRxPayloadLength() {
-    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RX_BUFFER_STATUS, 0x00, 0x00 };
-    uint8_t respons[3];
-
-    sx1262command(command, respons, sizeof(command));
-    return(respons[2]);
-  }
 
   void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint16_t length) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_READ_BUFFER, offset, 0x00 };
@@ -318,12 +324,12 @@ namespace wmbus {
     this->delegate_->end_transaction();
   }
   
-  uint8_t RxLoop::getRssiInst() {
-    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RSSI_INST, 0x00, 0x00 };
+  uint8_t RxLoop::getRxPayloadLength() {
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RX_BUFFER_STATUS, 0x00, 0x00 };
     uint8_t respons[3];
 
-    readBuffer(command, respons, sizeof(command));
-    return(respons[2] / 2);
+    sx1262command(command, respons, sizeof(command));
+    return(respons[2]);
   }
 
   void RxLoop::standby(uint8_t mode) {
