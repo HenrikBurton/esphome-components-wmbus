@@ -354,7 +354,7 @@ namespace wmbus {
 
   void RxLoop::setPacketType(uint8_t type) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_SET_PACKET_TYPE, type };
-    sx126Xcommand(command, sizeof(command));
+    sx1262command(command, sizeof(command));
   }
 
   void RxLoop::setRfFrequency(float freq) {
