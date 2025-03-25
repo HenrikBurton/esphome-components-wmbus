@@ -1,6 +1,7 @@
 #pragma once
 
 #include "esphome/core/log.h"
+#include "esphome/core/component.h"
 #include "esphome/components/spi/spi.h"
 
 #include "mbus.h"
