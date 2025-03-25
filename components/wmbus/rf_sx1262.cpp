@@ -11,7 +11,7 @@ namespace wmbus {
     this->gdo0 = gdo0;
     this->gdo2 = gdo2;
     this->reset = reset;
-    this->gdo0->setup();
+    this->spi_conf_.gdo0->setup();
     this->gdo2->setup();
     this->reset->setup();
     this->spi_setup();
