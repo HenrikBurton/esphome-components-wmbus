@@ -549,7 +549,7 @@ namespace wmbus {
       void sx1262command(uint8_t *, uint32_t);
       uint8_t getRxPayloadLength();
       void readBuffer(uint8_t *, uint8_t, uint8_t);
-      uint8_t GetRssiInst();
+      uint8_t getRssiInst();
       void standby(uint8_t);
       void setRx(uint32_t);
       void setPacketType(uint8_t);
