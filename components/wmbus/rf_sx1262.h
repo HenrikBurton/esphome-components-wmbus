@@ -542,7 +542,7 @@ namespace wmbus {
 
       bool syncMode{false};
 
-      uint8_t gdo0{0};
+      GPIOPin *gdo0{0};
       uint8_t gdo2{0};
       uint8_t reset{0};
 

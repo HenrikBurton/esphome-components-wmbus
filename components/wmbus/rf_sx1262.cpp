@@ -8,10 +8,10 @@ namespace wmbus {
   bool RxLoop::init(GPIOPin *gdo0, uint8_t gdo2, uint8_t reset, float freq, bool syncMode) {
     bool retVal = false;
     this->syncMode = syncMode;
-   // this->gdo0 = gdo0;
+    this->gdo0 = gdo0;
     this->gdo2 = gdo2;
     this->reset = reset;
-    this->spi_conf_.gdo0->setup();
+    this->gdo0->setup();
     this->gdo2->setup();
     this->reset->setup();
     this->spi_setup();
