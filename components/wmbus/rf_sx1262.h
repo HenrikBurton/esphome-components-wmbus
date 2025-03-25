@@ -543,6 +543,26 @@ namespace wmbus {
     private:
       bool start(bool force = true);
 
+      void resetDevice();
+      uint16_t getStatus();
+      uint16_t getIrqStatus();
+      void sx1262command(uint8_t *, uint32_t);
+      uint8_t getRxPayloadLength();
+      void readBuffer(uint8_t *, uint8_t, uint8_t);
+      uint8_t GetRssiInst();
+      void standby(uint8_t);
+      void setRx(uint32_t);
+      void setPacketType(uint8_t);
+      void setRfFrequency(float);
+      void setBufferBaseAddress(uint8_t, uint8_t);
+      void setModulationParams(float, float, float, uint32_t);
+      void setPacketParams(uint16_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
+      void setDioIrqParams(uint16_t, uint16_t, uint16_t, uint16_t);
+      void clearIrqStatus(uint16_t);
+      void setSyncWord();
+      void setDIO3AsTCXOCtrl(uint8_t, uint32_t);
+      void setFallbackMode(uint8_t);
+
       bool syncMode{false};
 
       GPIOPin *gdo0{0};

@@ -345,7 +345,7 @@ namespace wmbus {
     sx126Xcommand(data, sizeof(command));
   }
 
-  voind RxLoop::setRfFrequency(float freq) {
+  void RxLoop::setRfFrequency(float freq) {
     uint32_t freqRaw = (freq * (uint32_t(1) << RADIOLIB_SX126X_DIV_EXPONENT)) / RADIOLIB_SX126X_CRYSTAL_FREQ;
 
     uint8_t command[] = { RADIOLIB_SX126X_CMD_SET_RF_FREQUENCY, 
@@ -427,7 +427,7 @@ namespace wmbus {
     sx1262command(command, sizeof(command));
   }
 
-  void RxLoop::setPacketParams(uint16_t preambleLen,uint8_t preambleDetectorLen, 
+  void RxLoop::setPacketParams(uint16_t preambleLen, uint8_t preambleDetectorLen, 
     uint8_t syncWordLen, uint8_t addrComp, uint8_t packType, uint8_t payloadLen,
     uint8_t crcType, uint8_t whiten) {
 
