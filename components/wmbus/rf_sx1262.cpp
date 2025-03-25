@@ -315,7 +315,7 @@ namespace wmbus {
     this->delegate_->end_transaction();
   }
 
-  void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint16_t length) {
+  void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint8_t length) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_READ_BUFFER, offset, 0x00 };
 
     this->delegate_->begin_transaction();
