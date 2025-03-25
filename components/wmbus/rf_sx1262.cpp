@@ -340,7 +340,7 @@ namespace wmbus {
   
   void RxLoop::standby(uint8_t mode) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_SET_STANDBY, mode };
-    sx1262command(data, sizeof(command));
+    sx1262command(command, sizeof(command));
   }
 
   void RxLoop::setRx(uint32_t timeout) {
@@ -354,7 +354,7 @@ namespace wmbus {
 
   void RxLoop::setPacketType(uint8_t type) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_SET_PACKET_TYPE, type };
-    sx126Xcommand(data, sizeof(command));
+    sx126Xcommand(command, sizeof(command));
   }
 
   void RxLoop::setRfFrequency(float freq) {
@@ -464,7 +464,7 @@ namespace wmbus {
 
   void RxLoop::clearIrqStatus(uint16_t clearIrqParams) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_CLEAR_IRQ_STATUS, (uint8_t)((clearIrqParams >> 8) & 0xFF), (uint8_t)(clearIrqParams & 0xFF) };
-    sx1262command(command, sizeof(command)));
+    sx1262command(command, sizeof(command));
   }
 
   void RxLoop::setSyncWord() {
