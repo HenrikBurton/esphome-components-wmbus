@@ -253,11 +253,11 @@ namespace wmbus {
 
   void RxLoop::resetDevice() {
     // Reset device
-    this->reset_pin_->digital_write(true);
+    this->reset->digital_write(true);
     delay(2);
-    this->reset_pin_->digital_write(false);
+    this->reset->digital_write(false);
     delay(2);
-    this->reset_pin_->digital_write(true);
+    this->reset->digital_write(true);
   }
 
   uint16_t RxLoop::getStatus() {
@@ -265,7 +265,7 @@ namespace wmbus {
     uint8_t respons[2];
             
     // Wait until device is not BUSY
-    while(digital_read(gdo0)){
+    while(this->gdo0->digital_read()){
         delay(1);
     }
     this->delegate_->begin_transaction();
@@ -280,7 +280,7 @@ namespace wmbus {
     uint8_t respons[4];
 
     // Wait until device is not BUSY
-    while(digital_read(gdo0)){
+    while(this->gdo0->digital_read()){
         delay(1);
     }
     this->delegate_->begin_transaction();
