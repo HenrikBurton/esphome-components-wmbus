@@ -14,7 +14,7 @@ namespace wmbus {
     this->gdo0->setup();
     this->gdo2->setup();
     this->reset->setup();
-    esphome::spi_setup();
+    this->spi_setup();
 
     reset();
     standby(RADIOLIB_SX126X_STANDBY_RC);
