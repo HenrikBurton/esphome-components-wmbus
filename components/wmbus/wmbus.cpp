@@ -53,13 +53,13 @@ namespace wmbus {
     if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
       WMbusFrame mbus_data = rf_mbus_.get_frame();
-/*
+
       std::string telegram = format_hex_pretty(mbus_data.frame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
 
       this->frame_timestamp_ = this->time_->timestamp_now();
-      send_to_clients(mbus_data);
-*/
+//      send_to_clients(mbus_data);
+
       Telegram t;
       if (t.parseHeader(mbus_data.frame) && t.addresses.empty()) {
         ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
