@@ -354,7 +354,7 @@ namespace wmbus {
       ESP_LOGCONFIG(TAG, "    Duration: %d ms", this->led_blink_time_);
     }
 #ifdef USE_ESP32
-    ESP_LOGCONFIG(TAG, "  Chip ID: %012llX", ESP.getEfuseMac());
+    //ESP_LOGCONFIG(TAG, "  Chip ID: %012llX", ESP.getEfuseMac());
 #endif
     ESP_LOGCONFIG(TAG, "  SX1262 frequency: %3.3f MHz", this->frequency_);
     ESP_LOGCONFIG(TAG, "  SX1262 SPI bus:");
