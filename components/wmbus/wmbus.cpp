@@ -32,7 +32,7 @@ namespace wmbus {
     this->high_freq_.start();
     if (this->led_pin_ != nullptr) {
       this->led_pin_->setup();
-      this->led_pin_->digital_write(false);
+      this->led_pin_->digital_write(true);
       this->led_on_ = false;
     }
     if (!rf_mbus_.init(this->spi_conf_.gdo0, this->spi_conf_.gdo2,
