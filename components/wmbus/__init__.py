@@ -100,7 +100,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_MOSI_PIN,       default=13):      pins.internal_gpio_output_pin_schema,
     cv.Optional(CONF_MISO_PIN,       default=12):      pins.internal_gpio_input_pin_schema,
     cv.Optional(CONF_CLK_PIN,        default=14):      pins.internal_gpio_output_pin_schema,
-    cv.Optional(CONF_CS_PIN,         default=2):       pins.internal_gpio_output_pin_schema,
+#    cv.Optional(CONF_CS_PIN,         default=2):       pins.internal_gpio_output_pin_schema,
     cv.Optional(CONF_GDO0_PIN,       default=5):       pins.internal_gpio_input_pin_schema,
     cv.Optional(CONF_GDO2_PIN,       default=4):       pins.internal_gpio_input_pin_schema,
     cv.Optional(CONF_RESET_PIN,      default=3):       pins.internal_gpio_output_pin_schema,
@@ -112,7 +112,7 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_FREQUENCY,      default=868.950): cv.float_range(min=300, max=928),
     cv.Optional(CONF_SYNC_MODE,      default=False):   cv.boolean,
     cv.Optional(CONF_MQTT):                            cv.ensure_schema(WMBUS_MQTT_SCHEMA),
-}).extend(cv.COMPONENT_SCHEMA) #.extend(spi.spi_device_schema(cs_pin_required=False))
+}).extend(cv.COMPONENT_SCHEMA).extend(spi.spi_device_schema(cs_pin_required=False))
 
 def safe_ip(ip):
     if ip is None:
