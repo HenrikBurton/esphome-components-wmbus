@@ -39,9 +39,9 @@ namespace wmbus {
                        this->spi_conf_.reset, this->frequency_, this->sync_mode_)) {
       this->mark_failed();
       ESP_LOGE(TAG, "RF chip initialization failed");
-      this->led_pin_->digital_write(true);
       return;
     }
+    this->led_pin_->digital_write(true);
 #ifdef USE_WMBUS_MQTT
     this->mqtt_client_.setClient(this->tcp_client_);
     this->mqtt_client_.setServer(this->mqtt_->ip, this->mqtt_->port);
