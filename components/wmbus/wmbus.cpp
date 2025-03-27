@@ -13,7 +13,7 @@
 
 #ifdef USE_ESP32
 //SET_LOOP_TASK_STACK_SIZE(32 * 1024);
-#pragma message ( "Loop task stack increased." )
+//#pragma message ( "Loop task stack increased." )
 #endif
 #ifdef USE_ESP8266
 #error "ESP8266 not supported. Please use version 3.x: https://github.com/SzczepanLeon/esphome-components/issues/131"
