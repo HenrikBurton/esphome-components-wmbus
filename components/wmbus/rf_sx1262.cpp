@@ -7,6 +7,7 @@ namespace wmbus {
 
   bool RxLoop::init(GPIOPin *gdo0, GPIOPin *gdo2, GPIOPin *reset, float freq, bool syncMode) {
     bool retVal = false;
+    return(true);
     this->syncMode = syncMode;
     this->gdo0 = gdo0;
     this->gdo2 = gdo2;
@@ -15,7 +16,7 @@ namespace wmbus {
     this->gdo2->setup();
     this->reset->setup();
     this->spi_setup();
-    return(true);
+
     resetDevice();
     standby(RADIOLIB_SX126X_STANDBY_RC);
     setPacketType(RADIOLIB_SX126X_PACKET_TYPE_GFSK);
