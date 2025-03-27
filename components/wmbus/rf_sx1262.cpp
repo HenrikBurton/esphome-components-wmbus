@@ -7,7 +7,6 @@ namespace wmbus {
 
   bool RxLoop::init(GPIOPin *gdo0, GPIOPin *gdo2, GPIOPin *reset, float freq, bool syncMode) {
     bool retVal = false;
-    return(true);
     this->syncMode = syncMode;
     this->gdo0 = gdo0;
     this->gdo2 = gdo2;
@@ -15,6 +14,7 @@ namespace wmbus {
     this->gdo0->setup();
     this->gdo2->setup();
     this->reset->setup();
+    return(true);
     this->spi_setup();
 
     resetDevice();
