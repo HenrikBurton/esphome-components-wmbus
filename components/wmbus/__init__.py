@@ -142,7 +142,7 @@ async def to_code(config):
     cg.add(var.add_sx1262(gdo0, gdo2, reset, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
     time = await cg.get_variable(config[CONF_TIME_ID])
-    cg.add(var.set_time(time))
+#    cg.add(var.set_time(time))
 
 
     if config.get(CONF_ETH_REF):
@@ -151,7 +151,7 @@ async def to_code(config):
 
     if config.get(CONF_WIFI_REF):
         wifi = await cg.get_variable(config[CONF_WIFI_REF])
-        cg.add(var.set_wifi(wifi))
+#        cg.add(var.set_wifi(wifi))
 
     if config.get(CONF_MQTT_ID):
         mqtt = await cg.get_variable(config[CONF_MQTT_ID])
