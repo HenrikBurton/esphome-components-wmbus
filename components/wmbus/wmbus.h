@@ -172,11 +172,13 @@ namespace wmbus {
       bool led_on_{false};
       bool log_all_{false};
       RxLoop rf_mbus_;
+/*
 #ifdef USE_ETHERNET
       ethernet::EthernetComponent *net_component_{nullptr};
 #elif defined(USE_WIFI)
       wifi::WiFiComponent *net_component_{nullptr};
 #endif
+*/
 #ifdef USE_WMBUS_MQTT
       PubSubClient mqtt_client_;
       MqttClient *mqtt_{nullptr};
