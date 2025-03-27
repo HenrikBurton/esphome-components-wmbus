@@ -28,10 +28,10 @@
 #include "crc.h"
 
 #include "utils.h"
-
+/*
 #include <WiFiClient.h>
 #include <WiFiUdp.h>
-
+*/
 
 namespace esphome {
 namespace wmbus {
