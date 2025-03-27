@@ -12,7 +12,7 @@
 #endif
 
 #ifdef USE_ESP32
-SET_LOOP_TASK_STACK_SIZE(32 * 1024);
+//SET_LOOP_TASK_STACK_SIZE(32 * 1024);
 #pragma message ( "Loop task stack increased." )
 #endif
 #ifdef USE_ESP8266
@@ -53,13 +53,14 @@ namespace wmbus {
     if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
       WMbusFrame mbus_data = rf_mbus_.get_frame();
-
+/*
       std::string telegram = format_hex_pretty(mbus_data.frame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
 
       this->frame_timestamp_ = this->time_->timestamp_now();
       send_to_clients(mbus_data);
       Telegram t;
+*/
       if (t.parseHeader(mbus_data.frame) && t.addresses.empty()) {
         ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
       }
@@ -166,7 +167,8 @@ namespace wmbus {
                     ESP_LOGW(TAG, "Can't get requested field '%s'", field.first.c_str());
                   }
                 }
-#ifdef USE_WMBUS_MQTT
+/*
+                #ifdef USE_WMBUS_MQTT
                 std::string json;
                 meter->printJsonMeter(&t, &json, false);
                 std::string mqtt_topic = (App.get_friendly_name().empty() ? App.get_name() : App.get_friendly_name()) + "/wmbus/" + t.addresses[0].id;
@@ -184,6 +186,7 @@ namespace wmbus {
                 std::string mqtt_topic = this->mqtt_client_->get_topic_prefix() + "/wmbus/" + t.addresses[0].id;
                 this->mqtt_client_->publish(mqtt_topic, json);
 #endif
+*/
               }
               else {
                 ESP_LOGE(TAG, "Not for me T: %s", telegram.c_str());
@@ -225,7 +228,7 @@ namespace wmbus {
       }
     }
   }
-
+/*
   void WMBusComponent::send_to_clients(WMbusFrame &mbus_data) {
     for (auto & client : this->clients_) {
       switch (client.format) {
@@ -309,7 +312,7 @@ namespace wmbus {
       }
     }
   }
-
+*/
   const LogString *WMBusComponent::format_to_string(Format format) {
     switch (format) {
       case FORMAT_HEX:
