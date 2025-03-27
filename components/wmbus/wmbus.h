@@ -123,12 +123,14 @@ namespace wmbus {
           this->wmbus_listeners_[meter_id]->add_sensor(field, sensor);
         }
       }
+/*
 #ifdef USE_ETHERNET
       void set_eth(ethernet::EthernetComponent *eth_component) { this->net_component_ = eth_component; }
 #elif defined(USE_WIFI)
       void set_wifi(wifi::WiFiComponent *wifi_component) { this->net_component_ = wifi_component; }
 #endif
       void set_time(time::RealTimeClock *time) { this->time_ = time; }
+      */
 #ifdef USE_WMBUS_MQTT
       void set_mqtt(const std::string name,
                     const std::string password,
