@@ -13,9 +13,9 @@ namespace wmbus {
     this->reset = reset;
     this->gdo0->setup();
     this->gdo2->setup();
- //   this->reset->setup();
+    this->reset->setup();
     return(true);
-    this->spi_setup();
+//    this->spi_setup();
 
     resetDevice();
     standby(RADIOLIB_SX126X_STANDBY_RC);
