@@ -29,7 +29,6 @@ namespace wmbus {
   }
 
   void WMBusComponent::setup() {
-    this->spi_setup();
     this->high_freq_.start();
     if (this->led_pin_ != nullptr) {
       this->led_pin_->setup();
