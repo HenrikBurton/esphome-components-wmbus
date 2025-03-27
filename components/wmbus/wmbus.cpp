@@ -361,10 +361,10 @@ namespace wmbus {
     if (this->is_failed()) {
       ESP_LOGE(TAG, "   Check connection to SX1262!");
     }
-    LOG_PIN("    MOSI Pin: ", this->spi_conf_.mosi);
-    LOG_PIN("    MISO Pin: ", this->spi_conf_.miso);
-    LOG_PIN("    CLK Pin:  ", this->spi_conf_.clk);
-    LOG_PIN("    CS Pin:   ", this->spi_conf_.cs);
+//    LOG_PIN("    MOSI Pin: ", this->spi_conf_.mosi);
+//    LOG_PIN("    MISO Pin: ", this->spi_conf_.miso);
+//    LOG_PIN("    CLK Pin:  ", this->spi_conf_.clk);
+//    LOG_PIN("    CS Pin:   ", this->spi_conf_.cs);
     LOG_PIN("    GDO0 Pin: ", this->spi_conf_.gdo0);
     LOG_PIN("    GDO2 Pin: ", this->spi_conf_.gdo2);
     LOG_PIN("    RESET Pin: ", this->spi_conf_.reset);
