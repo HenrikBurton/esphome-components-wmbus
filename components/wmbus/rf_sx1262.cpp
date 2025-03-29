@@ -16,7 +16,7 @@ namespace wmbus {
     this->reset->setup();
 
     SPIClient::spi_setup();
-
+return true;
     resetDevice();
     standby(RADIOLIB_SX126X_STANDBY_RC);
     setPacketType(RADIOLIB_SX126X_PACKET_TYPE_GFSK);
