@@ -15,7 +15,7 @@ namespace wmbus {
     this->gdo2->setup();
     this->reset->setup();
     
-    spi_setup();
+    SPIDevice::spi_setup();
 
     resetDevice();
     standby(RADIOLIB_SX126X_STANDBY_RC);
@@ -254,11 +254,13 @@ namespace wmbus {
 
   void RxLoop::resetDevice() {
     // Reset device
+    while(true) {
     this->reset->digital_write(true);
     delay(2);
     this->reset->digital_write(false);
     delay(2);
     this->reset->digital_write(true);
+    }
   }
 
   uint16_t RxLoop::getStatus() {
