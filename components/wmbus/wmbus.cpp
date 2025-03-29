@@ -29,19 +29,21 @@ namespace wmbus {
   }
 
   void WMBusComponent::setup() {
-    this->high_freq_.start();
+
     if (this->led_pin_ != nullptr) {
       this->led_pin_->setup();
       this->led_pin_->digital_write(false);
       this->led_on_ = false;
     }
+    this->high_freq_.start();
+    this->led_pin_->digital_write(true);
     if (!rf_mbus_.init(this->spi_conf_.gdo0, this->spi_conf_.gdo2,
                        this->spi_conf_.reset, this->frequency_, this->sync_mode_)) {
       this->mark_failed();
       ESP_LOGE(TAG, "RF chip initialization failed");
       return;
     }
-    this->led_pin_->digital_write(true);
+
 #ifdef USE_WMBUS_MQTT
     this->mqtt_client_.setClient(this->tcp_client_);
     this->mqtt_client_.setServer(this->mqtt_->ip, this->mqtt_->port);
