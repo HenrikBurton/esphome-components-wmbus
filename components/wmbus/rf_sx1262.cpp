@@ -15,7 +15,7 @@ namespace wmbus {
     this->gdo2->setup();
     this->reset->setup();
     return true;
-    SPIDevice::spi_setup();
+    SPIClient::spi_setup();
 
     resetDevice();
     standby(RADIOLIB_SX126X_STANDBY_RC);
