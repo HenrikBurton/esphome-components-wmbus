@@ -34,6 +34,7 @@ namespace wmbus {
       this->led_pin_->setup();
       this->led_pin_->digital_write(false);
       this->led_on_ = false;
+      delay(1000);
     }
 
     if (!rf_mbus_.init(this->spi_conf_.gdo0, this->spi_conf_.gdo2,
