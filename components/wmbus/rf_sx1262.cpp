@@ -15,7 +15,7 @@ namespace wmbus {
     this->gdo2->setup();
     this->reset->setup();
 
-    //SPIClient::spi_setup();
+    SPIClient::spi_setup(BIT_ORDER_MSB_FIRST, MODE0, DATA_RATE_200KHZ);
 
     resetDevice();
 
