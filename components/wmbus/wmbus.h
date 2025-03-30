@@ -4,6 +4,7 @@
 #include "esphome/core/gpio.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/component.h"
+#include "esphome/components/spi/spi.h"
 #include "esphome/components/network/ip_address.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
