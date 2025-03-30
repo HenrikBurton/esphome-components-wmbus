@@ -18,9 +18,9 @@ namespace wmbus {
     SPIDevice::spi_setup();
 
     resetDevice();
-
-    standby(RADIOLIB_SX126X_STANDBY_RC);
     return(true);
+    standby(RADIOLIB_SX126X_STANDBY_RC);
+
     setPacketType(RADIOLIB_SX126X_PACKET_TYPE_GFSK);
     setRfFrequency(freq);
     setBufferBaseAddress(0x00, 0x00);
