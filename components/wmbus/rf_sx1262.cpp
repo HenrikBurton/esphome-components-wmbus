@@ -15,7 +15,7 @@ namespace wmbus {
     this->gdo2->setup();
     this->reset->setup();
 
-    //SPIDevice::spi_setup();
+    SPIDevice::spi_setup();
 
     resetDevice();
     return(true);
@@ -257,9 +257,9 @@ namespace wmbus {
   void RxLoop::resetDevice() {
     // Reset device
     this->reset->digital_write(true);
-    delay(20);
+    delay(1);
     this->reset->digital_write(false);
-    delay(20);
+    delay(1);
     this->reset->digital_write(true);
   }
 

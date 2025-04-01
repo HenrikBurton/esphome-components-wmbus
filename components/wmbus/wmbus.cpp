@@ -36,7 +36,7 @@ namespace wmbus {
       this->led_on_ = false;
       delay(1000);
     }
-    SPIDevice::spi_setup();
+
     if (!rf_mbus_.init(this->spi_conf_.gdo0, this->spi_conf_.gdo2,
                        this->spi_conf_.reset, this->frequency_, this->sync_mode_)) {
       this->mark_failed();
@@ -44,7 +44,7 @@ namespace wmbus {
       return;
     }
     this->led_pin_->digital_write(true);
-    this->high_freq_.start();
+    //this->high_freq_.start();
 
 #ifdef USE_WMBUS_MQTT
     this->mqtt_client_.setClient(this->tcp_client_);
