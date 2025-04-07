@@ -53,7 +53,7 @@ DEPENDENCIES = ["time", "spi"]
 AUTO_LOAD = ["sensor", "text_sensor"]
 
 wmbus_ns = cg.esphome_ns.namespace('wmbus')
-WMBusComponent = wmbus_ns.class_('WMBusComponent', cg.Component)
+WMBusComponent = wmbus_ns.class_('WMBusComponent', cg.Component, spi.SPIDevice)
 InfoComponent = wmbus_ns.class_('InfoComponent', cg.Component)
 Client = wmbus_ns.struct('Client')
 Format = wmbus_ns.enum("Format")
