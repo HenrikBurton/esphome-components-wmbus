@@ -114,7 +114,7 @@ CONFIG_SCHEMA = (
         cv.Optional(CONF_SYNC_MODE,      default=False):   cv.boolean,
         cv.Optional(CONF_MQTT):                            cv.ensure_schema(WMBUS_MQTT_SCHEMA),
     }).extend(cv.COMPONENT_SCHEMA)
-      .extend(spi.spi_device_schema(cs_pin_required=False))
+      .extend(spi.spi_device_schema(cs_pin_required=True))
 )
 
 def safe_ip(ip):

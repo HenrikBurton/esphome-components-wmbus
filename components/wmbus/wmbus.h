@@ -97,9 +97,7 @@ namespace wmbus {
       float get_setup_priority() const override { return setup_priority::PROCESSOR; }
   };
 
-  class WMBusComponent : public Component,
-                         public spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW, 
-                                               spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_200KHZ> {
+  class WMBusComponent : public Component {
     
     public:
       void setup() override;
