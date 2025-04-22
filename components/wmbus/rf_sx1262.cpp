@@ -271,7 +271,7 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
         delay(1);
     }
-    this->begin_transaction();
+    this->delegate->begin_transaction();
     this->transfer(command, respons, sizeof(command));
     this->end_transaction();
 
