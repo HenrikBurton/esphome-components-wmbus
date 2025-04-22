@@ -573,7 +573,7 @@ namespace wmbus {
       WMbusFrame returnFrame;
 
       RxLoopData rxLoop;
-      SPIDevice spiDevice;
+      SPIDevice *spiDevice{0};
       
       uint32_t sync_time_{0};
       uint8_t  extra_time_{50};
