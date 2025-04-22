@@ -496,7 +496,7 @@ namespace wmbus {
     this->end_transaction(); */
   }
 
-  void sx1262transaction(uint8_t *command, uint8_t *respons, uint32_t length) {
+  void RxLoop::sx1262transaction(uint8_t *command, uint8_t *respons, uint32_t length) {
     this->device->enable();
     this->device->write_array(command, length);
     this->device->read_array(respons, length);
