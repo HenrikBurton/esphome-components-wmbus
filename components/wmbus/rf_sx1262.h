@@ -531,7 +531,8 @@ typedef struct RxLoopData {
 namespace esphome {
 namespace wmbus {
 
-  class RxLoop : public Component {
+  class RxLoop : public Component,
+                 public spi::SPIDevice {
 
     public:
       bool init(GPIOPin *gdo0, GPIOPin *gdo2, GPIOPin *reset, float freq, bool syncMode);
