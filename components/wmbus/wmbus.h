@@ -4,7 +4,7 @@
 #include "esphome/core/gpio.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/component.h"
-#include "esphome/components/spi/spi.h"
+## #include "esphome/components/spi/spi.h"
 #include "esphome/components/network/ip_address.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
@@ -96,10 +96,11 @@ namespace wmbus {
       void setup() override;
       float get_setup_priority() const override { return setup_priority::PROCESSOR; }
   };
-
+/*
   class WMBusComponent : public Component,
                          public spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW, 
-                                               spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_200KHZ> {
+                                               spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_200KHZ> { */
+  class WMBusComponent : public Component {
     
     public:
       void setup() override;
