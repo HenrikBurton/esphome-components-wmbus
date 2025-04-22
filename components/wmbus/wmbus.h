@@ -128,7 +128,7 @@ namespace wmbus {
           this->wmbus_listeners_[meter_id]->add_sensor(field, sensor);
         }
       }
-      void set_spi_parent(spi::SPIDevice *device) { this->rf_mbus_.set_spi_parent(device); }
+      void set_spi_parent(SPIDevice *device) { this->rf_mbus_.set_spi_parent(device); }
       void set_cs_pin(GPIOPin *cs_pin) { this->rf_mbus_.set_cs_pin(cs_pin); }
       void set_data_rate(uint32_t data_rate) { this->rf_mbus_.set_data_rate(data_rate); }
 /*
