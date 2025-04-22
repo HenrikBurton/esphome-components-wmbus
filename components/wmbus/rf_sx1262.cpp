@@ -271,9 +271,9 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
         delay(1);
     }
-    this->delegate_->begin_transaction();
-    this->delegate_->transfer(command, respons, sizeof(command));
-    this->delegate_->end_transaction();
+    this->begin_transaction();
+    this->transfer(command, respons, sizeof(command));
+    this->end_transaction();
 
     return((uint16_t) respons[1]);
   }
@@ -286,9 +286,9 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
         delay(1);
     }
-    this->delegate_->begin_transaction();
-    this->delegate_->transfer(command, respons, sizeof(command));
-    this->delegate_->end_transaction();
+    this->begin_transaction();
+    this->transfer(command, respons, sizeof(command));
+    this->end_transaction();
 
     return((uint16_t)(respons[2] << 8) | respons[3]);
   }
@@ -301,9 +301,9 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
         delay(1);
     }
-    this->delegate_->begin_transaction();
-    this->delegate_->transfer(command, respons, sizeof(command));
-    this->delegate_->end_transaction();
+    this->begin_transaction();
+    this->transfer(command, respons, sizeof(command));
+    this->end_transaction();
     return(respons[2] / 2);
   }
 
@@ -315,9 +315,9 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
         delay(1);
     }    
-    this->delegate_->begin_transaction();
-    this->delegate_->transfer(command, respons, sizeof(command));
-    this->delegate_->end_transaction();
+    this->begin_transaction();
+    this->transfer(command, respons, sizeof(command));
+    this->end_transaction();
     return(respons[2]);
   }
 
@@ -327,18 +327,18 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
       delay(1);
     }
-    this->delegate_->begin_transaction();
-    this->delegate_->write_array(command, length);
-    this->delegate_->end_transaction();
+    this->begin_transaction();
+    this->write_array(command, length);
+    this->end_transaction();
   }
 
   void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint8_t length) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_READ_BUFFER, offset, 0x00 };
 
-    this->delegate_->begin_transaction();
-    this->delegate_->write_array(command, sizeof(command));
-    this->delegate_->read_array(buffer, length < MAX_FIXED_LENGTH ? length : MAX_FIXED_LENGTH);
-    this->delegate_->end_transaction();
+    this->begin_transaction();
+    this->write_array(command, sizeof(command));
+    this->read_array(buffer, length < MAX_FIXED_LENGTH ? length : MAX_FIXED_LENGTH);
+    this->end_transaction();
   }
   
   void RxLoop::standby(uint8_t mode) {
