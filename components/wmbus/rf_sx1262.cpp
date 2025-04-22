@@ -15,7 +15,7 @@ namespace wmbus {
     this->gdo2->setup();
     this->reset->setup();
 
-    spi::SPIDevice::setup();
+    this->setup();
 
     resetDevice();
     return(true);
