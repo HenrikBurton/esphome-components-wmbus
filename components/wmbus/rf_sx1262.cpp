@@ -15,7 +15,7 @@ namespace wmbus {
     this->gdo2->setup();
     this->reset->setup();
 
-    this->spiDevice->spi_setup();
+    this->device->spi_setup();
 
     resetDevice();
     return(true);
@@ -271,9 +271,10 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
         delay(1);
     }
-    this->delegate_->begin_transaction();
-    this->spiDevice->transfer(command, respons, sizeof(command));
-    this->end_transaction();
+    sx1262transaction(command, respons, sizeof(command));
+    /* this->delegate_->begin_transaction();
+    this->device->transfer(command, respons, sizeof(command));
+    this->end_transaction();*/
 
     return((uint16_t) respons[1]);
   }
@@ -319,17 +320,6 @@ namespace wmbus {
     this->transfer(command, respons, sizeof(command));
     this->end_transaction();
     return(respons[2]);
-  }
-
-  void RxLoop::sx1262command(uint8_t *command, uint32_t length) {
-            
-    // Wait until device is not BUSY
-    while(this->gdo0->digital_read()){
-      delay(1);
-    }
-    this->begin_transaction();
-    this->write_array(command, length);
-    this->end_transaction();
   }
 
   void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint8_t length) {
@@ -492,5 +482,25 @@ namespace wmbus {
     sx1262command(command, sizeof(command));
   }
 
+  void RxLoop::sx1262command(uint8_t *command, uint32_t length) {
+            
+    // Wait until device is not BUSY
+    while(this->gdo0->digital_read()){
+      delay(1);
+    }
+    this->device->enable();
+    this->write_array(command, length);
+    this->device->disable();
+    /*    this->begin_transaction();
+    this->write_array(command, length);
+    this->end_transaction(); */
+  }
+
+  void sx1262transaction(uint8_t *command, uint8_t *respons, uint32_t length) {
+    this->device->enable();
+    this->device->write_array(command, length);
+    this->device->read_array(respons, length);
+    this->device->disable();
+  }
 }
 }
