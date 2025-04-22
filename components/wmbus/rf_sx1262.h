@@ -547,6 +547,7 @@ namespace wmbus {
       uint16_t getStatus();
       uint16_t getIrqStatus();
       void sx1262command(uint8_t *, uint32_t);
+      void sx1262transaction(uint8_t *, uint8_t *, );
       uint8_t getRxPayloadLength();
       void readBuffer(uint8_t *, uint8_t, uint8_t);
       uint8_t getRssiInst();
