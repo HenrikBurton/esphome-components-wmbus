@@ -272,7 +272,7 @@ namespace wmbus {
         delay(1);
     }
     this->delegate_->begin_transaction();
-    this->transfer(command, respons, sizeof(command));
+    this->spiDevice->transfer(command, respons, sizeof(command));
     this->end_transaction();
 
     return((uint16_t) respons[1]);
