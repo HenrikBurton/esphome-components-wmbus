@@ -532,7 +532,8 @@ namespace esphome {
 namespace wmbus {
 
   class RxLoop : public Component,
-                 public spi::SPIDevice {
+                 public spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW, 
+                 spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_200KHZ> {
 
     public:
       bool init(GPIOPin *gdo0, GPIOPin *gdo2, GPIOPin *reset, float freq, bool syncMode);
