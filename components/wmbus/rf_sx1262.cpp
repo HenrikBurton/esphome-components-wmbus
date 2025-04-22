@@ -283,13 +283,10 @@ namespace wmbus {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_IRQ_STATUS, 0x00, 0x00, 0x00 };
     uint8_t respons[4];
 
-    // Wait until device is not BUSY
-    while(this->gdo0->digital_read()){
-        delay(1);
-    }
-    this->begin_transaction();
+    sx1262transaction(command, respons, sizeof(command));
+/*    this->begin_transaction();
     this->transfer(command, respons, sizeof(command));
-    this->end_transaction();
+    this->end_transaction();*/
 
     return((uint16_t)(respons[2] << 8) | respons[3]);
   }
@@ -298,13 +295,10 @@ namespace wmbus {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RSSI_INST, 0x00, 0x00 };
     uint8_t respons[3];
 
-    // Wait until device is not BUSY
-    while(this->gdo0->digital_read()){
-        delay(1);
-    }
-    this->begin_transaction();
+    sx1262transaction(command, respons, sizeof(command));
+    /*this->begin_transaction();
     this->transfer(command, respons, sizeof(command));
-    this->end_transaction();
+    this->end_transaction();*/
     return(respons[2] / 2);
   }
 
@@ -312,23 +306,20 @@ namespace wmbus {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RX_BUFFER_STATUS, 0x00, 0x00 };
     uint8_t respons[3];
 
-    // Wait until device is not BUSY
-    while(this->gdo0->digital_read()){
-        delay(1);
-    }    
-    this->begin_transaction();
+    sx1262transaction(command, respons, sizeof(command));
+    /*this->begin_transaction();
     this->transfer(command, respons, sizeof(command));
-    this->end_transaction();
+    this->end_transaction();*/
     return(respons[2]);
   }
 
   void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint8_t length) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_READ_BUFFER, offset, 0x00 };
 
-    this->begin_transaction();
-    this->write_array(command, sizeof(command));
-    this->read_array(buffer, length < MAX_FIXED_LENGTH ? length : MAX_FIXED_LENGTH);
-    this->end_transaction();
+    this->device->enable();
+    this->device->write_array(command, sizeof(command));
+    this->device->read_array(buffer, length < MAX_FIXED_LENGTH ? length : MAX_FIXED_LENGTH);
+    this->device->disable();
   }
   
   void RxLoop::standby(uint8_t mode) {
@@ -489,7 +480,7 @@ namespace wmbus {
       delay(1);
     }
     this->device->enable();
-    this->write_array(command, length);
+    this->device->write_array(command, length);
     this->device->disable();
     /*    this->begin_transaction();
     this->write_array(command, length);
@@ -497,6 +488,10 @@ namespace wmbus {
   }
 
   void RxLoop::sx1262transaction(uint8_t *command, uint8_t *respons, uint32_t length) {
+    // Wait until device is not BUSY
+    while(this->gdo0->digital_read()){
+      delay(1);
+    }
     this->device->enable();
     this->device->write_array(command, length);
     this->device->read_array(respons, length);
