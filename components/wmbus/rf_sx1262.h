@@ -574,6 +574,9 @@ namespace wmbus {
       WMbusFrame returnFrame;
 
       RxLoopData rxLoop;
+
+      
+      GPIOPin *cs{0};
       SPIDevice *device{0};
       
       uint32_t sync_time_{0};
