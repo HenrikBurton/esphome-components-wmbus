@@ -35,6 +35,9 @@
 */
 
 namespace esphome {
+
+  class SPIComponent; 
+
 namespace wmbus {
 
   enum Format : uint8_t {
