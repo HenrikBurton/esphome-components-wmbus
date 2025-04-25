@@ -316,10 +316,10 @@ namespace wmbus {
   void RxLoop::readBuffer(uint8_t *buffer, uint8_t offset, uint8_t length) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_READ_BUFFER, offset, 0x00 };
 
-    this->device->enable();
-    this->device->write_array(command, sizeof(command));
-    this->device->read_array(buffer, length < MAX_FIXED_LENGTH ? length : MAX_FIXED_LENGTH);
-    this->device->disable();
+    this->enable();
+    this->write_array(command, sizeof(command));
+    this->read_array(buffer, length < MAX_FIXED_LENGTH ? length : MAX_FIXED_LENGTH);
+    this->disable();
   }
   
   void RxLoop::standby(uint8_t mode) {
@@ -479,9 +479,9 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
       delay(1);
     }
-    this->device->enable();
-    this->device->write_array(command, length);
-    this->device->disable();
+    this->enable();
+    this->write_array(command, length);
+    this->disable();
     /*    this->begin_transaction();
     this->write_array(command, length);
     this->end_transaction(); */
@@ -492,10 +492,10 @@ namespace wmbus {
     while(this->gdo0->digital_read()){
       delay(1);
     }
-    this->device->enable();
-    this->device->write_array(command, length);
-    this->device->read_array(respons, length);
-    this->device->disable();
+    this->enable();
+    this->write_array(command, length);
+    this->read_array(respons, length);
+    this->disable();
   }
 }
 }
