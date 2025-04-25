@@ -495,7 +495,7 @@ namespace wmbus {
     this->enable();
     /*this->write_array(command, length);
     this->read_array(respons, length);*/
-    this->transfer(command, respons, length);
+    this->delegate_->transfer(command, respons, length);
     this->disable();
   }
 }
