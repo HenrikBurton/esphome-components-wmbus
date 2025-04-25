@@ -120,6 +120,7 @@ namespace wmbus {
             }
             // Mode T Block A
             else if (decode3OutOf6(rxLoop.pByteIndex, preamble)) {
+              ESP_LOGV(TAG, "3 of 6 decode OK: %02x %02x", preamble[0], preamble[1]);
               rxLoop.lengthField  = preamble[0];
               data_in.lengthField = rxLoop.lengthField;
               rxLoop.length  = byteSize(packetSize(rxLoop.lengthField));
