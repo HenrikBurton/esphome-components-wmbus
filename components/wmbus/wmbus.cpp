@@ -42,7 +42,7 @@ namespace wmbus {
       ESP_LOGE(TAG, "RF chip initialization failed");
       return;
     }
-    this->led_pin_->digital_write(true);
+    //this->led_pin_->digital_write(true);
     //this->high_freq_.start();
 
 #ifdef USE_WMBUS_MQTT
