@@ -63,7 +63,7 @@ namespace wmbus {
         case WAIT_FOR_SYNC:
           if (this->gdo2->digital_read()) {
             if (getIrqStatus() & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
-                clearIrqStatus(RADIOLIB_SX126X_IRQ_ALL);
+                clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
                 rxLoop.state = WAIT_FOR_DATA;
                 sync_time_ = millis();
             }
@@ -219,6 +219,7 @@ namespace wmbus {
     max_wait_time_ = extra_time_;
 
     setRx(0x000000);
+    clearIrqStatus(RADIOLIB_SX126X_IRQ_ALL);
 
     // Initialize RX info variable
     rxLoop.lengthField = 0;              // Length Field in the wM-Bus packet
