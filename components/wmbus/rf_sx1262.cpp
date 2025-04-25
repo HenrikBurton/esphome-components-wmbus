@@ -62,7 +62,9 @@ namespace wmbus {
         // RX active, waiting for SYNC
         case WAIT_FOR_SYNC:
           if (this->gdo2->digital_read()) {
-            if (getIrqStatus() & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
+            uint16_t irqStatus = getIrqStatus();
+            ESP_LOGV(TAG, "IRQ status: %04x", irqStatus);
+            if (IrqStatus & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
                 clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
                 ESP_LOGV(TAG, "SYNC detected, starting RX");
                 rxLoop.state = WAIT_FOR_DATA;
