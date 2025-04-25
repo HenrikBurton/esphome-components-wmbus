@@ -131,9 +131,9 @@ namespace wmbus {
           this->wmbus_listeners_[meter_id]->add_sensor(field, sensor);
         }
       }
-      void set_spi_parent(spi::SPIComponent *parent) { this->rf_mbus_.device.set_spi_parent(parent); }
-      void set_cs_pin(GPIOPin *cs_pin) { this->rf_mbus_.device.set_cs_pin(cs_pin); }
-      void set_data_rate(uint32_t data_rate) { this->rf_mbus_.device.set_data_rate(data_rate); }
+      void set_spi_parent(spi::SPIComponent *parent) { this->rf_mbus_.set_spi_parent(parent); }
+      void set_cs_pin(GPIOPin *cs_pin) { this->rf_mbus_.set_cs_pin(cs_pin); }
+      void set_data_rate(uint32_t data_rate) { this->rf_mbus_.set_data_rate(data_rate); }
 /*
 #ifdef USE_ETHERNET
       void set_eth(ethernet::EthernetComponent *eth_component) { this->net_component_ = eth_component; }
