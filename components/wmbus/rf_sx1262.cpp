@@ -309,8 +309,8 @@ namespace wmbus {
   }
 
   uint8_t RxLoop::getRxPayloadLength() {
-    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RX_BUFFER_STATUS, 0x00, 0x00 };
-    uint8_t respons[3];
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_GET_RX_BUFFER_STATUS, 0x00, 0x00, 0x00 };
+    uint8_t respons[4];
 
     sx1262transaction(command, respons, sizeof(command));
     /*this->begin_transaction();
