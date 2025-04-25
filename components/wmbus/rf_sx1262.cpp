@@ -74,8 +74,9 @@ namespace wmbus {
         case WAIT_FOR_DATA:
           if (this->gdo2->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
             uint8_t bytesInFIFO = getRxPayloadLength();
+            ESP_LOGV(TAG, "Bytes in FIFO: %d", bytesInFIFO);
             if (bytesInFIFO < 3) {
-                ESP_LOGV(TAG, "Got %d bytes, expected at least 3, restart FSM", bytesInFIFO);
+                ESP_LOGV(TAG, "Got %d bytes, expected at least 3, restarting FSM", bytesInFIFO);
                 rxLoop.state = INIT_RX;
                 return task();
             }
