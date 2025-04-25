@@ -76,6 +76,7 @@ namespace wmbus {
         // waiting for enough data in Rx FIFO buffer
         case WAIT_FOR_DATA:
           if (this->gdo2->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
+            clearIrqStatus(RADIOLIB_SX126X_IRQ_RX_DONE);
             uint8_t bytesInFIFO = getRxPayloadLength();
             ESP_LOGV(TAG, "Bytes in FIFO: %d", bytesInFIFO);
             if (bytesInFIFO < 3) {
@@ -89,6 +90,7 @@ namespace wmbus {
             rxLoop.bytesRx = 3;
             bytesInFIFO = bytesInFIFO - 3;
             const uint8_t *currentByte = rxLoop.pByteIndex;
+            ESP_LOGV(TAG, "1st 3 bytes: %02x %02x %02x", currentByte[0], currentByte[1], currentByte[2]);
             // Mode C
             if (*currentByte == WMBUS_MODE_C_PREAMBLE) {
               currentByte++;
@@ -147,7 +149,7 @@ namespace wmbus {
             rxLoop.state = READ_DATA;
             max_wait_time_ += extra_time_;
 
-            clearIrqStatus(RADIOLIB_SX126X_IRQ_RX_DONE);
+
 //            ELECHOUSE_cc1101.SpiWriteReg(CC1101_FIFOTHR, RX_FIFO_THRESHOLD);
 /*            return task();
           }
