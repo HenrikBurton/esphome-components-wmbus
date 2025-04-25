@@ -226,8 +226,7 @@ namespace wmbus {
     sync_time_ = millis();
     max_wait_time_ = extra_time_;
 
-    //setRx(0x000000);
-    //clearIrqStatus(RADIOLIB_SX126X_IRQ_ALL);
+    setRx(0x000000);  // Set Rx single mode
 
     // Initialize RX info variable
     rxLoop.lengthField = 0;              // Length Field in the wM-Bus packet
