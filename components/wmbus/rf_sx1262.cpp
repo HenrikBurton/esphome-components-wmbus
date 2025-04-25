@@ -63,7 +63,7 @@ namespace wmbus {
         case WAIT_FOR_SYNC:
           if (this->gdo2->digital_read()) {
             if (getIrqStatus() & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
-                clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_ALL);
+                clearIrqStatus(RADIOLIB_SX126X_IRQ_ALL);
                 rxLoop.state = WAIT_FOR_DATA;
                 sync_time_ = millis();
             }
