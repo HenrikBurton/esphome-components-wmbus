@@ -75,6 +75,7 @@ namespace wmbus {
           if (this->gdo2->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
             uint8_t bytesInFIFO = getRxPayloadLength();
             if (bytesInFIFO < 3) {
+                ESP_LOGV(TAG, "Got %d bytes, expected at least 3, restart FSM", bytesInFIFO);
                 rxLoop.state = INIT_RX;
                 return task();
             }
@@ -218,8 +219,8 @@ namespace wmbus {
     sync_time_ = millis();
     max_wait_time_ = extra_time_;
 
-    setRx(0x000000);
-    clearIrqStatus(RADIOLIB_SX126X_IRQ_ALL);
+    //setRx(0x000000);
+    //clearIrqStatus(RADIOLIB_SX126X_IRQ_ALL);
 
     // Initialize RX info variable
     rxLoop.lengthField = 0;              // Length Field in the wM-Bus packet
