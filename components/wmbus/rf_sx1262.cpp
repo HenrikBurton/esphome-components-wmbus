@@ -371,7 +371,10 @@ namespace wmbus {
   }
 
   void setRxGain(uint8_t gain) {
-    uint8_t command[] = { RADIOLIB_SX126X_REG_RX_GAIN, gain };
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_WRITE_REGISTER,
+      RADIOLIB_SX126X_REG_RX_GAIN >> 8 & 0xff, RADIOLIB_SX126X_REG_RX_GAIN,
+      gain
+    };
     sx1262command(command, sizeof(command));
   }
 
