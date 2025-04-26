@@ -466,7 +466,7 @@ namespace wmbus {
     uint8_t command[] = { 
       RADIOLIB_SX126X_CMD_WRITE_REGISTER,
       RADIOLIB_SX126X_REG_SYNC_WORD_0 >> 8 & 0xff, RADIOLIB_SX126X_REG_SYNC_WORD_0  & 0xff,
-      0x55, 0x54, 0x3d, 0x00, 0x00, 0x00 /*, 0x00*/
+      0x54, 0x3d, 0x00, 0x00, 0x00, 0x00
     };
     sx1262command(command, sizeof(command));
   }
