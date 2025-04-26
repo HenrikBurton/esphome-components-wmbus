@@ -93,6 +93,7 @@ namespace wmbus {
             ESP_LOGV(TAG, "1st 3 bytes: %02x %02x %02x", currentByte[0], currentByte[1], currentByte[2]);
             // Mode C
             if (*currentByte == WMBUS_MODE_C_PREAMBLE) {
+              ESP_LOGV(TAG, "Mode C ..");
               currentByte++;
               data_in.mode = 'C';
               // Block A
@@ -101,6 +102,7 @@ namespace wmbus {
                 rxLoop.lengthField = *currentByte;
                 rxLoop.length = 2 + packetSize(rxLoop.lengthField);
                 data_in.block = 'A';
+                ESP_LOGV(TAG, "Mode C block A length %d", rxLoop.length);
               }
               // Block B
               else if (*currentByte == WMBUS_BLOCK_B_PREAMBLE) {
@@ -108,6 +110,7 @@ namespace wmbus {
                 rxLoop.lengthField = *currentByte;
                 rxLoop.length = 2 + 1 + rxLoop.lengthField;
                 data_in.block = 'B';
+                ESP_LOGV(TAG, "Mode C block B length %d", rxLoop.length);
               }
               // Unknown type, reinit loop
               else {
@@ -120,13 +123,13 @@ namespace wmbus {
             }
             // Mode T Block A
             else if (decode3OutOf6(rxLoop.pByteIndex, preamble)) {
-              ESP_LOGV(TAG, "3 of 6 decode OK: %02x %02x", preamble[0], preamble[1]);
               rxLoop.lengthField  = preamble[0];
               data_in.lengthField = rxLoop.lengthField;
               rxLoop.length  = byteSize(packetSize(rxLoop.lengthField));
               data_in.mode   = 'T';
               data_in.block  = 'A';
               rxLoop.pByteIndex += 3;
+              ESP_LOGV(TAG, "Mode T block A, length %d", rxLoop.length);
             }
             // Unknown mode, reinit loop
             else {
