@@ -33,6 +33,7 @@ namespace wmbus {
                     0xff,
                     RADIOLIB_SX126X_GFSK_CRC_OFF, 
                     RADIOLIB_SX126X_GFSK_WHITENING_OFF);
+    setRxGain(RADIOLIB_SX126X_RX_GAIN_BOOSTED);
     //state = setDioIrqParams(RADIOLIB_SX126X_IRQ_RX_DONE, RADIOLIB_SX126X_IRQ_RX_DONE, 0, 0);
     setDioIrqParams(RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, 0, 0);
     setSyncWord();
@@ -366,6 +367,11 @@ namespace wmbus {
 
   void RxLoop::setBufferBaseAddress(uint8_t txBaseAddress, uint8_t rxBaseAddress) {
     uint8_t command[] = { RADIOLIB_SX126X_CMD_SET_BUFFER_BASE_ADDRESS, txBaseAddress, rxBaseAddress };
+    sx1262command(command, sizeof(command));
+  }
+
+  void setRxGain(uint8_t gain) {
+    uint8_t command[] = { RADIOLIB_SX126X_CMD_SET_RX_GAIN, gain };
     sx1262command(command, sizeof(command));
   }
 
