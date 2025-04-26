@@ -556,6 +556,7 @@ namespace wmbus {
       void setPacketType(uint8_t);
       void setRfFrequency(float);
       void setBufferBaseAddress(uint8_t, uint8_t);
+      void setRxGain(uint8_t);
       void setModulationParams(float, float, float, uint32_t);
       void setPacketParams(uint16_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
       void setDioIrqParams(uint16_t, uint16_t, uint16_t, uint16_t);
