@@ -321,6 +321,7 @@ namespace wmbus {
     /*this->begin_transaction();
     this->transfer(command, respons, sizeof(command));
     this->end_transaction();*/
+    ESP_LOGV(TAG, "getRxPayloadLength: %d %d", respons[2], respons[3]);
     return(respons[2]);
   }
 
