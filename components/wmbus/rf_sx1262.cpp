@@ -24,7 +24,7 @@ namespace wmbus {
     setPacketType(RADIOLIB_SX126X_PACKET_TYPE_GFSK);
     setRfFrequency(freq);
     setBufferBaseAddress(0x00, 0x00);
-    setModulationParams(32.768f, 50.0f, 156.2f, RADIOLIB_SX126X_GFSK_FILTER_NONE); // bitrate, freqDeviation, Bandwidth, PulseShape
+    setModulationParams(100.0f, 50.0f, 234.3f, RADIOLIB_SX126X_GFSK_FILTER_NONE); // bitrate, freqDeviation, Bandwidth, PulseShape
     //setModulationParams(32.768f, 50.0f, 156.2f, RADIOLIB_SX126X_GFSK_FILTER_NONE); // bitrate, freqDeviation, Bandwidth, PulseShape
     setPacketParams(16, // bitlength of TX preamble
                     RADIOLIB_SX126X_GFSK_PREAMBLE_DETECT_16, 
