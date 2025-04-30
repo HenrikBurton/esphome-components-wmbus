@@ -65,10 +65,10 @@ namespace wmbus {
         case WAIT_FOR_SYNC:
           if (this->gdo2->digital_read()) {
             uint16_t irqStatus = getIrqStatus();
-            ESP_LOGV(TAG, "IRQ status: %04x", irqStatus);
+            //ESP_LOGV(TAG, "IRQ status: %04x", irqStatus);
             if (irqStatus & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
                 clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
-                ESP_LOGV(TAG, "SYNC detected, starting RX");
+                //ESP_LOGV(TAG, "SYNC detected, starting RX");
                 rxLoop.state = WAIT_FOR_DATA;
                 sync_time_ = millis();
             }
@@ -131,7 +131,7 @@ namespace wmbus {
               data_in.mode   = 'T';
               data_in.block  = 'A';
               rxLoop.pByteIndex += 3;
-              ESP_LOGV(TAG, "Mode T block A, length %d", rxLoop.length);
+              ESP_LOGV(TAG, "Mode T block A, length %d %02x %02x", rxLoop.length, preamble[0], preamble[1]);
             }
             // Unknown mode, reinit loop
             else {
