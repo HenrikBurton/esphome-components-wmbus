@@ -27,8 +27,8 @@ namespace wmbus {
     setModulationParams(32.768f, 50.0f, 156.2f, RADIOLIB_SX126X_GFSK_FILTER_NONE); // bitrate, freqDeviation, Bandwidth, PulseShape
     //setModulationParams(32.768f, 50.0f, 156.2f, RADIOLIB_SX126X_GFSK_FILTER_NONE); // bitrate, freqDeviation, Bandwidth, PulseShape
     setPacketParams(16, // bitlength of TX preamble
-                    RADIOLIB_SX126X_GFSK_PREAMBLE_DETECT_8, 
-                    15, // bitlength of syncword
+                    RADIOLIB_SX126X_GFSK_PREAMBLE_DETECT_OFF, 
+                    24, // bitlength of syncword
                     RADIOLIB_SX126X_GFSK_ADDRESS_FILT_OFF, 
                     RADIOLIB_SX126X_GFSK_PACKET_VARIABLE, 
                     0xff,
@@ -477,7 +477,7 @@ namespace wmbus {
       RADIOLIB_SX126X_CMD_WRITE_REGISTER,
       RADIOLIB_SX126X_REG_SYNC_WORD_0 >> 8 & 0xff, RADIOLIB_SX126X_REG_SYNC_WORD_0  & 0xff,
       //0x54, 0x3d, 0x00, 0x00, 0x00, 0x00
-      0xa8, 0x7a, 0x00, 0x00, 0x00, 0x00
+      0x55, 0x54, 0x3d, 0x00, 0x00, 0x00
     };
     sx1262command(command, sizeof(command));
   }
