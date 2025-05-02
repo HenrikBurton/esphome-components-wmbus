@@ -84,7 +84,7 @@ namespace wmbus {
             if (bytesInFIFO < 3) {
                 ESP_LOGV(TAG, "Got %d bytes, expected at least 3, restarting FSM", bytesInFIFO);
                 rxLoop.state = INIT_RX;
-                return task();
+                return false;
             }
             uint8_t preamble[2];
             // Read the 3 first bytes,
@@ -117,7 +117,7 @@ namespace wmbus {
               // Unknown type, reinit loop
               else {
                 rxLoop.state = INIT_RX;
-                return task();
+                return false;
               }
               // don't include C "preamble"
               *(rxLoop.pByteIndex) = rxLoop.lengthField;
@@ -136,7 +136,7 @@ namespace wmbus {
             // Unknown mode, reinit loop
             else {
               rxLoop.state = INIT_RX;
-              return task();
+              return false;
             }
 
             rxLoop.bytesLeft = rxLoop.length - 3;
