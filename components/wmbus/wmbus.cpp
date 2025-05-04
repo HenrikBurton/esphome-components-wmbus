@@ -203,6 +203,7 @@ namespace wmbus {
           }
         }
       }
+      sleep(10); // Sleep for 10ms to avoid flooding the log with messages
     }
   }
 
