@@ -43,7 +43,7 @@ namespace wmbus {
       return;
     }
 
-    this->high_freq_.start();
+    //this->high_freq_.start();
 
 #ifdef USE_WMBUS_MQTT
     this->mqtt_client_.setClient(this->tcp_client_);
