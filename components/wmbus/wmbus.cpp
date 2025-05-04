@@ -43,7 +43,7 @@ namespace wmbus {
       return;
     }
 
-    //this->high_freq_.start();
+    this->high_freq_.start();
 
 #ifdef USE_WMBUS_MQTT
     this->mqtt_client_.setClient(this->tcp_client_);
@@ -105,7 +105,7 @@ namespace wmbus {
                     telegram.c_str(),
                     mbus_data.mode,
                     mbus_data.block);
-          ESP_LOGI(TAG, "%d%", millis() - this->led_on_millis_);
+
           if (meter_in_config) {
             bool supported_link_mode{false};
             if (used_drv_info.linkModes().empty()) {
@@ -171,7 +171,6 @@ namespace wmbus {
                     ESP_LOGW(TAG, "Can't get requested field '%s'", field.first.c_str());
                   }
                 }
-                ESP_LOGI(TAG, "%d%", millis() - this->led_on_millis_);
 /*
                 #ifdef USE_WMBUS_MQTT
                 std::string json;
@@ -203,7 +202,6 @@ namespace wmbus {
           }
         }
       }
-      sleep(10); // Sleep for 10ms to avoid flooding the log with messages
     }
   }
 

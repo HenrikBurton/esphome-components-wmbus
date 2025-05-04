@@ -18,14 +18,13 @@ namespace wmbus {
     this->spi_setup();
 
     resetDevice();
-    /*return(true);*/
+
     standby(RADIOLIB_SX126X_STANDBY_RC);
 
     setPacketType(RADIOLIB_SX126X_PACKET_TYPE_GFSK);
     setRfFrequency(freq);
     setBufferBaseAddress(0x00, 0x00);
     setModulationParams(100.0f, 50.0f, 196.0f, RADIOLIB_SX126X_GFSK_FILTER_NONE); // bitrate, freqDeviation, Bandwidth, PulseShape
-    //setModulationParams(32.768f, 50.0f, 156.2f, RADIOLIB_SX126X_GFSK_FILTER_NONE); // bitrate, freqDeviation, Bandwidth, PulseShape
     setPacketParams(16, // bitlength of TX preamble
                     RADIOLIB_SX126X_GFSK_PREAMBLE_DETECT_8, 
                     16, // bitlength of syncword
@@ -35,7 +34,6 @@ namespace wmbus {
                     RADIOLIB_SX126X_GFSK_CRC_OFF, 
                     RADIOLIB_SX126X_GFSK_WHITENING_OFF);
     setRxGain(RADIOLIB_SX126X_RX_GAIN_POWER_SAVING);
-    //state = setDioIrqParams(RADIOLIB_SX126X_IRQ_RX_DONE, RADIOLIB_SX126X_IRQ_RX_DONE, 0, 0);
     setDioIrqParams(RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, 0, 0);
     setSyncWord();
     setDIO3AsTCXOCtrl(RADIOLIB_SX126X_DIO3_OUTPUT_3_0, 64);  // Delay = 1 ms / 0.015625 ms = 64
@@ -65,10 +63,8 @@ namespace wmbus {
         case WAIT_FOR_SYNC:
           if (this->gdo2->digital_read()) {
             uint16_t irqStatus = getIrqStatus();
-            //ESP_LOGV(TAG, "IRQ status: %04x", irqStatus);
             if (irqStatus & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
                 clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
-                //ESP_LOGV(TAG, "SYNC detected, starting RX");
                 rxLoop.state = WAIT_FOR_DATA;
                 sync_time_ = millis();
             }
@@ -80,7 +76,6 @@ namespace wmbus {
           if (this->gdo2->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
             clearIrqStatus(RADIOLIB_SX126X_IRQ_RX_DONE);
             uint8_t bytesInFIFO = getRxPayloadLength();
-            ESP_LOGV(TAG, "Bytes in FIFO: %d", bytesInFIFO);
             if (bytesInFIFO < 3) {
                 ESP_LOGV(TAG, "Got %d bytes, expected at least 3, restarting FSM", bytesInFIFO);
                 rxLoop.state = INIT_RX;
@@ -92,7 +87,7 @@ namespace wmbus {
             rxLoop.bytesRx = 3;
             bytesInFIFO = bytesInFIFO - 3;
             const uint8_t *currentByte = rxLoop.pByteIndex;
-            ESP_LOGV(TAG, "1st 3 bytes: %02x %02x %02x", currentByte[0], currentByte[1], currentByte[2]);
+            //ESP_LOGV(TAG, "1st 3 bytes: %02x %02x %02x", currentByte[0], currentByte[1], currentByte[2]);
             // Mode C
             if (*currentByte == WMBUS_MODE_C_PREAMBLE) {
               ESP_LOGV(TAG, "Mode C ..");
@@ -131,7 +126,6 @@ namespace wmbus {
               data_in.mode   = 'T';
               data_in.block  = 'A';
               rxLoop.pByteIndex += 3;
-              ESP_LOGV(TAG, "Mode T block A, length %d %02x %02x", rxLoop.length, preamble[0], preamble[1]);
             }
             // Unknown mode, reinit loop
             else {
