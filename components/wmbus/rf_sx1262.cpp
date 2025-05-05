@@ -49,6 +49,8 @@ namespace wmbus {
       ESP_LOGE(TAG, "SX1262 initialization FAILED!");
     }
 
+    rxLoop.state = INIT_RX; // set initial state
+
     return retVal;
   }
 
@@ -56,7 +58,7 @@ namespace wmbus {
     do {
       switch (rxLoop.state) {
         case INIT_RX:
-          start();
+          start(true);
           return false;
 
         // RX active, waiting for SYNC

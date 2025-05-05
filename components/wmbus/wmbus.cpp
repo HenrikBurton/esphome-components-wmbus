@@ -59,7 +59,7 @@ namespace wmbus {
 
     if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
-      if (runOnceDebug) return;
+//      if (runOnceDebug) return;
       WMbusFrame mbus_data = rf_mbus_.get_frame();
       std::string telegram = format_hex_pretty(mbus_data.frame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
