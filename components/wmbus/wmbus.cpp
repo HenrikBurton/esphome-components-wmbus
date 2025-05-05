@@ -133,12 +133,12 @@ namespace wmbus {
                       used_driver.c_str());
             }
             else {
-              this->led_pin_->digital_write(true);
               auto *sensor = this->wmbus_listeners_[meter_id];
               
               bool id_match;
               MeterInfo mi;
               mi.parse("ESPHome", used_driver, t.addresses[0].id + ",", sensor->myKey);
+              this->led_pin_->digital_write(true);
               auto meter = createMeter(&mi);
               this->led_pin_->digital_write(false);
               std::vector<Address> addresses;
