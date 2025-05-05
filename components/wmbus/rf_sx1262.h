@@ -576,11 +576,9 @@ namespace wmbus {
 
       RxLoopData rxLoop;
 
-/*      SPIDevice device;*/
-      
       uint32_t sync_time_{0};
-      uint8_t  extra_time_{50};
-      uint8_t  max_wait_time_ = extra_time_;
+      uint32_t extra_time_{5000};
+      uint32_t max_wait_time_ = extra_time_;
   };
 
 }
