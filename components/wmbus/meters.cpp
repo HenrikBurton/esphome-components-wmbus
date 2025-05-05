@@ -1992,7 +1992,7 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
                 keymsg);
         return newm;
     }
-    verbose("(createMeter) driverLookup failed");
+    verbose("(createMeter) driverLookup failed"); 
     return newm;
 }
 
