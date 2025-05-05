@@ -56,9 +56,9 @@ namespace wmbus {
 
   void WMBusComponent::loop() {
     //this->led_handler();
-    this->led_pin_->digital_write(true);
+//    this->led_pin_->digital_write(true);
     bool gotFrame = rf_mbus_.task();
-    this->led_pin_->digital_write(false);
+//    this->led_pin_->digital_write(false);
     if (gotFrame) {
     //if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
@@ -133,6 +133,7 @@ namespace wmbus {
                       used_driver.c_str());
             }
             else {
+              this->led_pin_->digital_write(true);
               auto *sensor = this->wmbus_listeners_[meter_id];
               
               bool id_match;
@@ -203,6 +204,7 @@ namespace wmbus {
               }
               runOnceDebug = true;
               ESP_LOGD(TAG, "runOnceDebug = true");
+              this->led_pin_->digital_write(false);
             }
           }
           else {
