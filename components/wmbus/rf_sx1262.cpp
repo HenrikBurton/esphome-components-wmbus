@@ -34,7 +34,8 @@ namespace wmbus {
                     RADIOLIB_SX126X_GFSK_CRC_OFF, 
                     RADIOLIB_SX126X_GFSK_WHITENING_OFF);
     setRxGain(RADIOLIB_SX126X_RX_GAIN_POWER_SAVING);
-    setDioIrqParams(RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, 0, 0);
+    setDioIrqParams(RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, 
+                    RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID, 0, 0);
     setSyncWord();
     setDIO3AsTCXOCtrl(RADIOLIB_SX126X_DIO3_OUTPUT_3_0, 64);  // Delay = 1 ms / 0.015625 ms = 64
     setFallbackMode(RADIOLIB_SX126X_RX_TX_FALLBACK_MODE_STDBY_XOSC);
@@ -75,7 +76,7 @@ namespace wmbus {
         // waiting for enough data in Rx FIFO buffer
         case WAIT_FOR_DATA:
           if (this->gdo2->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
-            clearIrqStatus(RADIOLIB_SX126X_IRQ_RX_DONE);
+            clearIrqStatus(RADIOLIB_SX126X_IRQ_RX_DONE || RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
             uint8_t bytesInFIFO = getRxPayloadLength();
             if (bytesInFIFO < 3) {
                 ESP_LOGV(TAG, "Got %d bytes, expected at least 3, restarting FSM", bytesInFIFO);
