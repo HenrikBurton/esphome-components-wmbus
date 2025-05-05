@@ -71,6 +71,7 @@ namespace wmbus {
         ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
       }
       else {
+        if (runOnceDebug) return;
         uint32_t meter_id = (uint32_t)strtoul(t.addresses[0].id.c_str(), nullptr, 16);
         bool meter_in_config = (this->wmbus_listeners_.count(meter_id) == 1) ? true : false;
         
@@ -98,7 +99,7 @@ namespace wmbus {
               }
             }
           }
-    if (runOnceDebug) return;
+
           this->led_blink();
           ESP_LOGI(TAG, "%s [0x%08x] RSSI: %ddBm T: %s %c1 %c",
                     (used_driver.empty()? "Unknown!" : used_driver.c_str()),
