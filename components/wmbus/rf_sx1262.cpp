@@ -64,8 +64,7 @@ namespace wmbus {
         // RX active, waiting for SYNC
         case WAIT_FOR_SYNC:
           if (this->gdo2->digital_read()) {
-            uint16_t irqStatus = getIrqStatus();
-            if (irqStatus & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
+            if (getIrqStatus() & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
                 clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
                 rxLoop.state = WAIT_FOR_DATA;
                 sync_time_ = millis();
@@ -168,10 +167,14 @@ namespace wmbus {
             uint8_t bytesInFIFO = ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x7F;
             ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.pByteIndex, bytesInFIFO - 1);
 */
-            readBuffer(rxLoop.pByteIndex, rxLoop.bytesRx, bytesInFIFO);
+/*            readBuffer(rxLoop.pByteIndex, rxLoop.bytesRx, bytesInFIFO);
             rxLoop.bytesLeft  -= (bytesInFIFO - 1);
             rxLoop.pByteIndex += (bytesInFIFO - 1);
-            rxLoop.bytesRx    += (bytesInFIFO - 1);
+            rxLoop.bytesRx    += (bytesInFIFO - 1);*/
+            readBuffer(rxLoop.pByteIndex, rxLoop.bytesRx, rxLoop.bytesLeft);
+            rxLoop.pByteIndex += (rxLoop.bytesLeft);
+            rxLoop.bytesRx    += (rxLoop.bytesLeft);
+            rxLoop.bytesLeft  = 0;
             max_wait_time_    += extra_time_;
           }
           break;
