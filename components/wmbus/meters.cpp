@@ -1969,6 +1969,7 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
 
     if (di != NULL)
     {
+        verbose("(createMeter) lookupDriver %s", di->name().str().c_str());
         shared_ptr<Meter> newm = di->construct(*mi);
         for (string& j : mi->extra_calculated_fields)
         {
@@ -1991,7 +1992,7 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
                 keymsg);
         return newm;
     }
-
+    verbose("(createMeter) driverLookup failed"
     return newm;
 }
 
