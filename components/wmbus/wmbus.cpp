@@ -137,7 +137,7 @@ namespace wmbus {
               
               bool id_match;
               MeterInfo mi;
-              ESP_LOGD(TAG, "Used driver %s, AES %s, Key %s", used_driver, t.addresses[0].id + ",",sensor->myKey);
+              ESP_LOGD(TAG, "Used driver %s, AES %s, Key %s", used_driver.c_str(), t.addresses[0].id.c_str() + ",",sensor->myKey.c_str());
               mi.parse("ESPHome", used_driver, t.addresses[0].id + ",", sensor->myKey);
               this->led_pin_->digital_write(true);
               auto meter = createMeter(&mi);
