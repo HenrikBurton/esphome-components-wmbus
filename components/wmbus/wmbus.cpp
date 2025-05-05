@@ -55,9 +55,10 @@ namespace wmbus {
   }
 
   void WMBusComponent::loop() {
-    this->led_handler();
-
+    //this->led_handler();
+    this->led_pin_->digital_write(true);
     if (rf_mbus_.task()) {
+      this->led_pin_->digital_write(false);
       ESP_LOGVV(TAG, "Have data from RF ...");
 //      if (runOnceDebug) return;
       WMbusFrame mbus_data = rf_mbus_.get_frame();
@@ -100,7 +101,7 @@ namespace wmbus {
             }
           }
 
-          this->led_blink();
+          //this->led_blink();
           ESP_LOGI(TAG, "%s [0x%08x] RSSI: %ddBm T: %s %c1 %c",
                     (used_driver.empty()? "Unknown!" : used_driver.c_str()),
                     meter_id,

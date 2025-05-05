@@ -58,7 +58,7 @@ namespace wmbus {
     do {
       switch (rxLoop.state) {
         case INIT_RX:
-          start(true);
+          start();
           return false;
 
         // RX active, waiting for SYNC
@@ -172,8 +172,8 @@ namespace wmbus {
             rxLoop.pByteIndex += (bytesInFIFO - 1);
             rxLoop.bytesRx    += (bytesInFIFO - 1);*/
             readBuffer(rxLoop.pByteIndex, rxLoop.bytesRx, rxLoop.bytesLeft);
-            rxLoop.pByteIndex += (rxLoop.bytesLeft);
-            rxLoop.bytesRx    += (rxLoop.bytesLeft);
+            rxLoop.pByteIndex += rxLoop.bytesLeft;
+            rxLoop.bytesRx    += rxLoop.bytesLeft;
             rxLoop.bytesLeft  = 0;
             max_wait_time_    += extra_time_;
           }
@@ -220,9 +220,9 @@ namespace wmbus {
     if (!force) {
       if (!reinit_needed) {
         // already in RX?
-       // if ((getStatus() & 0x70) == RADIOLIB_SX126X_STATUS_MODE_RX) {
+        if ((getStatus() & 0x70) == RADIOLIB_SX126X_STATUS_MODE_RX) {
           return false;
-      //  }
+        }
       }
     }
     // init RX here, each time we're idle
