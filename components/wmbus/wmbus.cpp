@@ -56,11 +56,10 @@ namespace wmbus {
 
   void WMBusComponent::loop() {
     this->led_handler();
+    if (runOnceDebug) return;
     if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
       WMbusFrame mbus_data = rf_mbus_.get_frame();
-      if (runOnceDebug) return;
-      runOnceDebug = true;
       std::string telegram = format_hex_pretty(mbus_data.frame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
 
@@ -198,6 +197,7 @@ namespace wmbus {
               else {
                 ESP_LOGE(TAG, "Not for me T: %s", telegram.c_str());
               }
+              runOnceDebug = true;
             }
           }
           else {
