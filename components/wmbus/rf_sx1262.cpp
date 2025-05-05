@@ -183,6 +183,7 @@ namespace wmbus {
       uint8_t overfl = 0;// ELECHOUSE_cc1101.SpiReadStatus(CC1101_RXBYTES) & 0x80;
       // end of packet in length mode
       if ((!overfl) && (!this->gdo2->digital_read())  && (rxLoop.state > WAIT_FOR_DATA)) {
+        ESP_LOGV(TAG, "Eop");
 //        ELECHOUSE_cc1101.SpiReadBurstReg(CC1101_RXFIFO, rxLoop.bytesRx, rxLoop.bytesLeft);
         rxLoop.bytesRx += rxLoop.bytesLeft;
         data_in.length  = rxLoop.bytesRx;
