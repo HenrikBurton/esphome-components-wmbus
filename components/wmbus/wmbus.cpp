@@ -50,6 +50,8 @@ namespace wmbus {
     this->mqtt_client_.setServer(this->mqtt_->ip, this->mqtt_->port);
     this->mqtt_client_.setBufferSize(1000);
 #endif
+
+    runOnceDebuig = false;
   }
 
   void WMBusComponent::loop() {
@@ -57,7 +59,8 @@ namespace wmbus {
     if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
       WMbusFrame mbus_data = rf_mbus_.get_frame();
-
+      if (runOnceDebug) return;
+      runOnceDebug = true;
       std::string telegram = format_hex_pretty(mbus_data.frame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
 

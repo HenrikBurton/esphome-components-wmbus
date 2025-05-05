@@ -199,6 +199,8 @@ namespace wmbus {
       mqtt::MQTTClientComponent *mqtt_client_{nullptr};
 #endif
       time_t frame_timestamp_;
+
+      bool runOnceDebug{0};
   };
 
 }  // namespace wmbus
