@@ -57,8 +57,10 @@ namespace wmbus {
   void WMBusComponent::loop() {
     //this->led_handler();
     this->led_pin_->digital_write(true);
-    if (rf_mbus_.task()) {
-      this->led_pin_->digital_write(false);
+    bold gotFrame = rf_mbus_.task();
+    this->led_pin_->digital_write(false);
+    if (gotFrame) {
+    //if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
 //      if (runOnceDebug) return;
       WMbusFrame mbus_data = rf_mbus_.get_frame();
