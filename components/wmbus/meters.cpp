@@ -1464,8 +1464,8 @@ bool MeterInfo::parse(string n, string d, string aes, string k)
         verbose("is_driver_and_extras failed");
         return false;
     }
-    string str = address_expressions[0].c_str();
-    verbose("(parse) name %s, adr_exp %s, key %s", name.c_str(), str, key.c_str());
+    string str = address_expressions[0];
+    verbose("(parse) name %s, adr_exp %s, key %s", name.c_str(), str.c_str(), key.c_str());
     return true;
 }
 
