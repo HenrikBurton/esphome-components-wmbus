@@ -56,7 +56,7 @@ namespace wmbus {
 
   void WMBusComponent::loop() {
     this->led_handler();
-
+    if (runOnceDebug) return;
     if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
       WMbusFrame mbus_data = rf_mbus_.get_frame();
@@ -71,7 +71,6 @@ namespace wmbus {
         ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
       }
       else {
-        if (runOnceDebug) return;
         uint32_t meter_id = (uint32_t)strtoul(t.addresses[0].id.c_str(), nullptr, 16);
         bool meter_in_config = (this->wmbus_listeners_.count(meter_id) == 1) ? true : false;
         
