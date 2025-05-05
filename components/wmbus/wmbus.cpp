@@ -57,7 +57,7 @@ namespace wmbus {
   void WMBusComponent::loop() {
     //this->led_handler();
     this->led_pin_->digital_write(true);
-    bold gotFrame = rf_mbus_.task();
+    bool gotFrame = rf_mbus_.task();
     this->led_pin_->digital_write(false);
     if (gotFrame) {
     //if (rf_mbus_.task()) {
