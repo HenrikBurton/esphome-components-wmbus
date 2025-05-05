@@ -51,7 +51,7 @@ namespace wmbus {
     this->mqtt_client_.setBufferSize(1000);
 #endif
 
-    runOnceDebuig = false;
+    runOnceDebug = false;
   }
 
   void WMBusComponent::loop() {
