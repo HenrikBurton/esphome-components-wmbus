@@ -198,6 +198,7 @@ namespace wmbus {
                 ESP_LOGE(TAG, "Not for me T: %s", telegram.c_str());
               }
               runOnceDebug = true;
+              ESP_LOGD(TAG, "runOnceDebug = true");
             }
           }
           else {
