@@ -143,6 +143,7 @@ namespace wmbus {
               std::vector<Address> addresses;
               AboutTelegram about{"ESPHome wM-Bus", mbus_data.rssi, FrameType::WMBUS, this->frame_timestamp_};
               meter->handleTelegram(about, mbus_data.frame, false, &addresses, &id_match, &t);
+              this->led_pin_->digital_write(false);
               if (id_match) {
                 for (auto const& field : sensor->fields) {
                   std::string field_name = field.first.first;
@@ -204,7 +205,6 @@ namespace wmbus {
               }
               runOnceDebug = true;
               ESP_LOGD(TAG, "runOnceDebug = true");
-              this->led_pin_->digital_write(false);
             }
           }
           else {
