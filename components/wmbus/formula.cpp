@@ -903,13 +903,13 @@ bool FormulaImplementation::parse(Meter* m, const string& f)
         debug("(formula) tokens: ");
         for (Token& t : tokens_)
         {
-            debug("%s ", t.str(formula_).c_str());
+            //debug("%s ", t.str(formula_).c_str());
         }
     }
 
     ok = go();
     if (!ok) return false;
-    verbose("(formula) parsing done!");
+
     if (isDebugEnabled())
     {
         debug("(formula) %s", tree().c_str());
