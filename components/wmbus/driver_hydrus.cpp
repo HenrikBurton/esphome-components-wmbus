@@ -53,8 +53,6 @@ namespace
             "Status of meter.",
             PrintProperty::STATUS | PrintProperty::INCLUDE_TPL_STATUS);
 
-        verbose("(Driver) %s", di.name().str().c_str());
-        
         addNumericFieldWithExtractor(
             "total",
             "The total water consumption recorded by this meter.",
@@ -66,6 +64,8 @@ namespace
             .set(VIFRange::Volume)
             );
 
+        verbose("(Driver) %s", di.name().str().c_str());
+        
         addNumericFieldWithExtractor(
             "total_tariff{tariff_counter}",
             "The total water consumption recorded on tariff # by this meter.",
