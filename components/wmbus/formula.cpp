@@ -909,7 +909,7 @@ bool FormulaImplementation::parse(Meter* m, const string& f)
 
     ok = go();
     if (!ok) return false;
-
+    verbose("(formula) parsing done!");
     if (isDebugEnabled())
     {
         debug("(formula) %s", tree().c_str());

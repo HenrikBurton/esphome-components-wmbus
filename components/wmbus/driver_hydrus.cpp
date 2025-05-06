@@ -65,8 +65,8 @@ namespace
             );
 
         addNumericFieldWithExtractor(
-//            "total_tariff{tariff_counter}",
-            "total_tariff",
+            "total_tariff{tariff_counter}",
+//            "total_tariff",
             "The total water consumption recorded on tariff # by this meter.",
             DEFAULT_PRINT_PROPERTIES,
             Quantity::Volume,
@@ -80,8 +80,8 @@ namespace
         verbose("(Driver) %s", di.name().str().c_str());
         
         addNumericFieldWithExtractor(
-//            "total_tariff{tariff_counter}_at_date",
-            "total_tariff_at_date",
+            "total_tariff{tariff_counter}_at_date",
+//            "total_tariff_at_date",
             "The total water consumption recorded on tariff # by this meter at billing date.",
             DEFAULT_PRINT_PROPERTIES,
             Quantity::Volume,
