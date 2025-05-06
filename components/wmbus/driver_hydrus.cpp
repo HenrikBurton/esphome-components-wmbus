@@ -65,7 +65,8 @@ namespace
             );
 
         addNumericFieldWithExtractor(
-            "total_tariff{tariff_counter}",
+//            "total_tariff{tariff_counter}",
+            "total_tariff",
             "The total water consumption recorded on tariff # by this meter.",
             DEFAULT_PRINT_PROPERTIES,
             Quantity::Volume,
