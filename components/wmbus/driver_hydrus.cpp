@@ -48,8 +48,6 @@ namespace
         addOptionalLibraryFields("operating_time_h,actuality_duration_s,meter_datetime,customer");
         addOptionalLibraryFields("flow_temperature_c,external_temperature_c");
             
-        verbose("(Driver) %s", di.name().str().c_str());
-        
         addStringField(
             "status",
             "Status of meter.",
@@ -91,6 +89,8 @@ namespace
             .set(StorageNr(1))
             );
 
+        verbose("(Driver) %s", di.name().str().c_str());
+        
         addNumericFieldWithExtractor(
             "flow",
             "The current water flow.",
