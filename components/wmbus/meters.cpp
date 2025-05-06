@@ -1971,9 +1971,11 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
     {
         verbose("(createMeter) lookupDriver %s", di->name().str().c_str());
         shared_ptr<Meter> newm = di->construct(*mi);
+        verbose("(createMeter) di->construct");
         for (string& j : mi->extra_calculated_fields)
         {
             newm->addExtraCalculatedField(j);
+            verbose("(createMeter) addExtraCalculatedField");
         }
       
         if (mi->selected_fields.size() > 0)
