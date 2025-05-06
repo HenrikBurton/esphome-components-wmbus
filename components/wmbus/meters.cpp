@@ -1970,7 +1970,7 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
     if (di != NULL)
     {
         verbose("(createMeter) lookupDriver %s", di->name().str().c_str() );
-        if(di->construct==NULL) verbose("(createMeter) construct is NULL");
+        if(&di->construct(*mi)==NULL) verbose("(createMeter) construct is NULL");
         shared_ptr<Meter> newm = di->construct(*mi);
         verbose("(createMeter) di->construct");
         for (string& j : mi->extra_calculated_fields)
