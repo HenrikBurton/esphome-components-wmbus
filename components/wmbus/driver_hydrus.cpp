@@ -64,6 +64,8 @@ namespace
             .set(VIFRange::Volume)
             );
 
+        verbose("(Driver) %s", di.name().str().c_str());
+        
         addNumericFieldWithExtractor(
             "total_tariff{tariff_counter}",
             "The total water consumption recorded on tariff # by this meter.",
@@ -89,8 +91,6 @@ namespace
             .set(StorageNr(1))
             );
 
-        verbose("(Driver) %s", di.name().str().c_str());
-        
         addNumericFieldWithExtractor(
             "flow",
             "The current water flow.",
