@@ -44,6 +44,7 @@ namespace
 
     Driver::Driver(MeterInfo &mi, DriverInfo &di) : MeterCommonImplementation(mi, di)
     {
+        verbose("(Driver) %s", di.name().str().c_str());
         addOptionalLibraryFields("operating_time_h,actuality_duration_s,meter_datetime,customer");
         addOptionalLibraryFields("flow_temperature_c,external_temperature_c");
 
