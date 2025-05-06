@@ -320,6 +320,7 @@ void MeterCommonImplementation::addNumericFieldWithExtractor(string vname,
     Unit display_unit,
     double scale)
 {
+    verbose("(meter) Adding numeric field: %s", vname.c_str());
     field_infos_.emplace_back(
         FieldInfo(field_infos_.size(),
             vname,
