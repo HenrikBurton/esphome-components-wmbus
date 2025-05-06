@@ -158,6 +158,8 @@ namespace
             .set(MeasurementType::Instantaneous)
             .set(VIFRange::RemainingBattery),
             Unit::Year);
+            
+        verbose("(Driver) %s", di.name().str().c_str());
     }
 }
 
