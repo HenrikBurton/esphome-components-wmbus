@@ -903,8 +903,8 @@ bool FormulaImplementation::parse(Meter* m, const string& f)
         debug("(formula) tokens: ");
         for (Token& t : tokens_)
         {
-            //debug("%s ", t.str(formula_).c_str());
-            debug("%s: start %d len %d", toString(t.type), t.start, t.len);
+            debug("%s ", t.vals(formula_).c_str());
+            //debug("%s: start %d len %d", toString(t.type), t.start, t.len);
         }
     }
 
