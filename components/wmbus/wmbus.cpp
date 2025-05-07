@@ -50,19 +50,14 @@ namespace wmbus {
     this->mqtt_client_.setServer(this->mqtt_->ip, this->mqtt_->port);
     this->mqtt_client_.setBufferSize(1000);
 #endif
-
-    runOnceDebug = false;
   }
 
   void WMBusComponent::loop() {
-    //this->led_handler();
-//    this->led_pin_->digital_write(true);
-    bool gotFrame = rf_mbus_.task();
-//    this->led_pin_->digital_write(false);
-    if (gotFrame) {
-    //if (rf_mbus_.task()) {
+    this->led_handler();
+
+    if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
-//      if (runOnceDebug) return;
+
       WMbusFrame mbus_data = rf_mbus_.get_frame();
       std::string telegram = format_hex_pretty(mbus_data.frame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
@@ -103,7 +98,7 @@ namespace wmbus {
             }
           }
 
-          //this->led_blink();
+          this->led_blink();
           ESP_LOGI(TAG, "%s [0x%08x] RSSI: %ddBm T: %s %c1 %c",
                     (used_driver.empty()? "Unknown!" : used_driver.c_str()),
                     meter_id,
@@ -139,9 +134,9 @@ namespace wmbus {
               MeterInfo mi;
               ESP_LOGD(TAG, "Used driver %s, AES %s, Key %s", used_driver.c_str(), t.addresses[0].id.c_str(), sensor->myKey.c_str());
               mi.parse("ESPHome", used_driver, t.addresses[0].id + ",", sensor->myKey);
-              this->led_pin_->digital_write(true);
+
               auto meter = createMeter(&mi);
-              this->led_pin_->digital_write(false);
+
               std::vector<Address> addresses;
               AboutTelegram about{"ESPHome wM-Bus", mbus_data.rssi, FrameType::WMBUS, this->frame_timestamp_};
               meter->handleTelegram(about, mbus_data.frame, false, &addresses, &id_match, &t);
@@ -204,8 +199,6 @@ namespace wmbus {
               else {
                 ESP_LOGE(TAG, "Not for me T: %s", telegram.c_str());
               }
-              runOnceDebug = true;
-              ESP_LOGD(TAG, "runOnceDebug = true");
             }
           }
           else {

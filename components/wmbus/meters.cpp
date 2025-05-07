@@ -320,7 +320,6 @@ void MeterCommonImplementation::addNumericFieldWithExtractor(string vname,
     Unit display_unit,
     double scale)
 {
-    verbose("(meter) Adding numeric field: %s", vname.c_str());
     field_infos_.emplace_back(
         FieldInfo(field_infos_.size(),
             vname,
@@ -1970,14 +1969,11 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
 
     if (di != NULL)
     {
-        verbose("(createMeter) lookupDriver %s", di->name().str().c_str() );
-
         shared_ptr<Meter> newm = di->construct(*mi);
-        verbose("(createMeter) di->construct");
+
         for (string& j : mi->extra_calculated_fields)
         {
             newm->addExtraCalculatedField(j);
-            verbose("(createMeter) addExtraCalculatedField");
         }
       
         if (mi->selected_fields.size() > 0)
@@ -1996,7 +1992,7 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
                 keymsg);
         return newm;
     }
-    verbose("(createMeter) driverLookup failed"); 
+
     return newm;
 }
 

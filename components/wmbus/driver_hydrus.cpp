@@ -44,7 +44,6 @@ namespace
 
     Driver::Driver(MeterInfo &mi, DriverInfo &di) : MeterCommonImplementation(mi, di)
     {
-        verbose("(Driver) %s", di.name().str().c_str());
         addOptionalLibraryFields("operating_time_h,actuality_duration_s,meter_datetime,customer");
         addOptionalLibraryFields("flow_temperature_c,external_temperature_c");
             
@@ -66,7 +65,6 @@ namespace
 
         addNumericFieldWithExtractor(
             "total_tariff{tariff_counter}",
-//            "total_tariff",
             "The total water consumption recorded on tariff # by this meter.",
             DEFAULT_PRINT_PROPERTIES,
             Quantity::Volume,
@@ -77,11 +75,8 @@ namespace
             .set(TariffNr(1),TariffNr(2))
             );
 
-        verbose("(Driver) %s", di.name().str().c_str());
-        
         addNumericFieldWithExtractor(
             "total_tariff{tariff_counter}_at_date",
-//            "total_tariff_at_date",
             "The total water consumption recorded on tariff # by this meter at billing date.",
             DEFAULT_PRINT_PROPERTIES,
             Quantity::Volume,

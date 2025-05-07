@@ -200,7 +200,6 @@ namespace wmbus {
 #endif
       time_t frame_timestamp_;
 
-      bool runOnceDebug{0};
   };
 
 }  // namespace wmbus
