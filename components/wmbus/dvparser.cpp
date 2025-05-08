@@ -1158,7 +1158,8 @@ bool parseDV(Telegram* t,
     for (;;)
     {
         id_bytes.clear();
-        DEBUG_PARSER("(dvparser debug) Remaining format data %ju", std::distance(*format, format_end));
+        //DEBUG_PARSER("(dvparser debug) Remaining format data %ju", std::distance(*format, format_end));
+        verbose("(dvparser debug) Remaining format data %ju", std::distance(*format, format_end));
         if (*format == format_end) break;
 
         if (force_mfct_index != -1)
@@ -1168,7 +1169,8 @@ bool parseDV(Telegram* t,
 
             if (index >= force_mfct_index)
             {
-                DEBUG_PARSER("(dvparser) manufacturer specific data, parsing is done.", dif);
+                //DEBUG_PARSER("(dvparser) manufacturer specific data, parsing is done.", dif);
+                verbose("(dvparser) manufacturer specific data, parsing is done.", dif);
                 size_t datalen = std::distance(data, data_end);
                 string value = bin2hex(data, data_end, datalen);
                 t->addExplanationAndIncrementPos(data, datalen, KindOfData::CONTENT, Understanding::NONE, "manufacturer specific data %s", value.c_str());
@@ -1180,14 +1182,17 @@ bool parseDV(Telegram* t,
 
         MeasurementType mt = difMeasurementType(dif);
         int datalen = difLenBytes(dif);
-        DEBUG_PARSER("(dvparser debug) dif=%02x datalen=%d \"%s\" type=%s", dif, datalen, difType(dif).c_str(),
+        //DEBUG_PARSER("(dvparser debug) dif=%02x datalen=%d \"%s\" type=%s", dif, datalen, difType(dif).c_str(),
+            measurementTypeName(mt).c_str());
+        verbose("(dvparser debug) dif=%02x datalen=%d \"%s\" type=%s", dif, datalen, difType(dif).c_str(),
             measurementTypeName(mt).c_str());
 
         if (datalen == -2)
         {
             if (dif == 0x0f)
             {
-                DEBUG_PARSER("(dvparser) reached dif %02x manufacturer specific data, parsing is done.", dif);
+                //DEBUG_PARSER("(dvparser) reached dif %02x manufacturer specific data, parsing is done.", dif);
+                verbose("(dvparser) reached dif %02x manufacturer specific data, parsing is done.", dif);
                 datalen = std::distance(data, data_end);
                 string value = bin2hex(data + 1, data_end, datalen - 1);
                 t->mfct_0f_index = 1 + std::distance(data_start, data);
@@ -1197,7 +1202,8 @@ bool parseDV(Telegram* t,
             }
             if (dif == 0x1f)
             {
-                DEBUG_PARSER("(dvparser) reached dif %02x more records in next telegram.", dif);
+                //DEBUG_PARSER("(dvparser) reached dif %02x more records in next telegram.", dif);
+                verbose("(dvparser) reached dif %02x more records in next telegram.", dif);
                 datalen = std::distance(data, data_end);
                 string value = bin2hex(data + 1, data_end, datalen - 1);
                 t->mfct_0f_index = 1 + std::distance(data_start, data);
@@ -1205,7 +1211,8 @@ bool parseDV(Telegram* t,
                 t->addExplanationAndIncrementPos(data, datalen, KindOfData::CONTENT, Understanding::FULL, "%02X more data in next telegram %s", dif, value.c_str());
                 break;
             }
-            DEBUG_PARSER("(dvparser) reached unknown dif %02x treating remaining data as manufacturer specific, parsing is done.", dif);
+            //DEBUG_PARSER("(dvparser) reached unknown dif %02x treating remaining data as manufacturer specific, parsing is done.", dif);
+            verbose("(dvparser) reached unknown dif %02x treating remaining data as manufacturer specific, parsing is done.", dif);
             datalen = std::distance(data, data_end);
             string value = bin2hex(data + 1, data_end, datalen - 1);
             t->mfct_0f_index = 1 + std::distance(data_start, data);
@@ -1254,7 +1261,8 @@ bool parseDV(Telegram* t,
             int storage_nr_bits = (dife & 0x0f);
             storage_nr |= storage_nr_bits << (1 + difenr * 4);
 
-            DEBUG_PARSER("(dvparser debug) dife=%02x (subunit=%d tariff=%d storagenr=%d)", dife, subunit, tariff, storage_nr);
+            //DEBUG_PARSER("(dvparser debug) dife=%02x (subunit=%d tariff=%d storagenr=%d)", dife, subunit, tariff, storage_nr);
+            verbose("(dvparser debug) dife=%02x (subunit=%d tariff=%d storagenr=%d)", dife, subunit, tariff, storage_nr);
 
             if (data_has_difvifs)
             {
@@ -1284,7 +1292,8 @@ bool parseDV(Telegram* t,
         std::set<VIFCombinable> found_combinable_vifs;
         std::set<uint16_t> found_combinable_vifs_raw;
 
-        DEBUG_PARSER("(dvparser debug) vif=%04x \"%s\"", vif, vifType(vif).c_str());
+        //DEBUG_PARSER("(dvparser debug) vif=%04x \"%s\"", vif, vifType(vif).c_str());
+        verbose("(dvparser debug) vif=%04x \"%s\"", vif, vifType(vif).c_str());
 
         if (data_has_difvifs)
         {
@@ -1311,7 +1320,8 @@ bool parseDV(Telegram* t,
         // with the compact format.
         if (vif == 0x7c)
         {
-            DEBUG_PARSER("(dvparser debug) variable length vif found");
+            //DEBUG_PARSER("(dvparser debug) variable length vif found");
+            verbose("(dvparser debug) variable length vif found");
             if (*format == format_end) { debug("(dvparser) warning: unexpected end of data (vif varlen expected)"); break; }
             uchar viflen = **format;
             id_bytes.push_back(viflen);
@@ -1420,7 +1430,8 @@ bool parseDV(Telegram* t,
             snprintf(hex, 3, "%02X", c);
             dv.append(hex);
         }
-        DEBUG_PARSER("(dvparser debug) key \"%s\"", dv.c_str());
+        //DEBUG_PARSER("(dvparser debug) key \"%s\"", dv.c_str());
+        verbose("(dvparser debug) key \"%s\"", dv.c_str());
 
         int count = ++dv_count[dv];
         if (count > 1) {
@@ -1429,7 +1440,8 @@ bool parseDV(Telegram* t,
         else {
             strprintf(&key, "%s", dv.c_str());
         }
-        DEBUG_PARSER("(dvparser debug) DifVif key is %s", key.c_str());
+        //DEBUG_PARSER("(dvparser debug) DifVif key is %s", key.c_str());
+        verbose("(dvparser debug) DifVif key is %s", key.c_str());
 
         int remaining = std::distance(data, data_end);
         if (remaining < 1)
@@ -1439,12 +1451,14 @@ bool parseDV(Telegram* t,
         }
 
         if (variable_length) {
-            DEBUG_PARSER("(dvparser debug) varlen %02x", *(data + 0));
+            //DEBUG_PARSER("(dvparser debug) varlen %02x", *(data + 0));
+            verbose("(dvparser debug) varlen %02x", *(data + 0));
             datalen = *(data);
             t->addExplanationAndIncrementPos(data, 1, KindOfData::PROTOCOL, Understanding::FULL, "%02X varlen=%d", *(data + 0), datalen);
             remaining--; // Drop the length byte.
         }
-        DEBUG_PARSER("(dvparser debug) remaining data %d len=%d", remaining, datalen);
+        //DEBUG_PARSER("(dvparser debug) remaining data %d len=%d", remaining, datalen);
+        verbose("(dvparser debug) remaining data %d len=%d", remaining, datalen);
         if (remaining < datalen)
         {
             debug("(dvparser) warning: unexpected end of data");
@@ -1469,7 +1483,8 @@ bool parseDV(Telegram* t,
 
         if (isTraceEnabled())
         {
-            debug("[DVPARSER] entry %s", dve->str().c_str());
+            //debug("[DVPARSER] entry %s", dve->str().c_str());
+            verbose("[DVPARSER] entry %s", dve->str().c_str());
         }
 
         assert(key == dve->dif_vif_key.str());
@@ -1477,7 +1492,8 @@ bool parseDV(Telegram* t,
         if (value.length() > 0) {
             // This call increments data with datalen.
             t->addExplanationAndIncrementPos(data, datalen, KindOfData::CONTENT, Understanding::NONE, "%s", value.c_str());
-            DEBUG_PARSER("(dvparser debug) data \"%s\"", value.c_str());
+            /DEBUG_PARSER("(dvparser debug) data \"%s\"", value.c_str());
+            verbose("(dvparser debug) data \"%s\"", value.c_str());
         }
         if (remaining == datalen || data == databytes.end()) {
             // We are done here!
@@ -1491,7 +1507,8 @@ bool parseDV(Telegram* t,
     if (data_has_difvifs) {
         if (hash_to_format_.count(hash) == 0) {
             hash_to_format_[hash] = format_string;
-            debug("(dvparser) found new format \"%s\" with hash %x, remembering!", format_string.c_str(), hash);
+            //debug("(dvparser) found new format \"%s\" with hash %x, remembering!", format_string.c_str(), hash);
+            verbose("(dvparser) found new format \"%s\" with hash %x, remembering!", format_string.c_str(), hash);
         }
     }
 

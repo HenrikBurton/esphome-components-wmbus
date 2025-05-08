@@ -1650,7 +1650,7 @@ bool Telegram::parseShortTPL(std::vector<uchar>::iterator& pos)
         "%02x tpl-sts-field (%s)", tpl_sts, decodeTPLStatusByteOnlyStandardBits(tpl_sts).c_str());
     verbose("(parseShortTPL) tpl_cfg %02x %02x", *pos, *(pos + 1));
     bool ok = parseTPLConfig(pos);
-    verbose("(parseShortTPL) parseTOKConfig %d", ok);
+    verbose("(parseShortTPL) parseTPLConfig %d", ok);
     if (!ok) return false;
 
     return true;
