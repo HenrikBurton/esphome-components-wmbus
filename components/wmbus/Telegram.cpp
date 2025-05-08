@@ -2099,9 +2099,9 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
         "%02x tpl-ci-field (%s)",
         tpl_ci, ciType(tpl_ci).c_str());
     int len = ciFieldLength(tpl_ci);
-    verbose("(Telegram) before checkLength()");
+    verbose("(Telegram) before checkLength() %d", len);
     if (remaining < len + 1 && !mfct_specific) return expectedMore(__LINE__);
-
+    verbose("(Telegram) before switch()");
     switch (tpl_ci)
     {
     case CI_Field_Values::TPL_72: return parse_TPL_72(pos);
