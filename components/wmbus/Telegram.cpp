@@ -2276,7 +2276,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
 
     printTPL();
     if (decryption_failed) return false;
-
+    verbose("(Telegram) sucessfully parsed TPL");
     return true;
 }
 
