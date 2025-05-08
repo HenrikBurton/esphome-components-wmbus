@@ -917,7 +917,7 @@ bool MeterCommonImplementation::handleTelegram(AboutTelegram &about, vector<ucha
     {
         out_analyzed->force_mfct_index = force_mfct_index_;
     }
-
+    verbose("(meter) Before parse()");
     ok = out_analyzed->parse(input_frame, &meter_keys_, true);
     if (!ok)
     {
