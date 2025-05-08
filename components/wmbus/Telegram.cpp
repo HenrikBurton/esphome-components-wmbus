@@ -2075,7 +2075,8 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
     int remaining = distance(pos, frame.end());
     if (remaining == 0) return false;
 
-    debug("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
+    //debug("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
+    verbose("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
 
     int ci_field = *pos;
     int mfct_specific = isCiFieldManufacturerSpecific(ci_field);
@@ -2093,12 +2094,12 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
     }
     tpl_ci = ci_field;
     tpl_start = pos;
-
+    verbose("(Telegram) before addExplanationAndIncrementPos()");
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-ci-field (%s)",
         tpl_ci, ciType(tpl_ci).c_str());
     int len = ciFieldLength(tpl_ci);
-
+    verbose("(Telegram) before checkLength()");
     if (remaining < len + 1 && !mfct_specific) return expectedMore(__LINE__);
 
     switch (tpl_ci)
@@ -2119,7 +2120,7 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
         return true; // Manufacturer specific telegram payload. Oh well....
     }
     }
-
+    verbose("(Telegram) before distance()");
     header_size = distance(frame.begin(), pos);
     if (parser_warns_)
     {
