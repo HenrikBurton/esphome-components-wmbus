@@ -924,7 +924,7 @@ bool MeterCommonImplementation::handleTelegram(AboutTelegram &about, vector<ucha
         // Ignoring telegram since it could not be parsed.
         return false;
     }
-    ESP_LOGD((TAG, "Before processFieldExtractors()"));
+    verbose("(meter)Before processFieldExtractors()");
     // Invoke standardized field extractors!
     processFieldExtractors(out_analyzed);
     if (hasProcessContent())
@@ -933,9 +933,9 @@ bool MeterCommonImplementation::handleTelegram(AboutTelegram &about, vector<ucha
         processContent(out_analyzed);
     }
     // Invoke any calculators working on the extracted fields.
-    ESP_LOGD((TAG, "Before processFieldCalculators()"));
+    verbose(("Before processFieldCalculators()"));
     processFieldCalculators();
-    ESP_LOGD((TAG, "After processFieldCalculators()"));
+    verbose(("After processFieldCalculators()"));
     // All done....
     triggerUpdate(out_analyzed);
     return true;
