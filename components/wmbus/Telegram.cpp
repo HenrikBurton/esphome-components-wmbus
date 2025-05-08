@@ -1639,14 +1639,18 @@ string decodeTPLStatusByteWithMfct(uchar sts, Translate::Lookup& lookup)
 bool Telegram::parseShortTPL(std::vector<uchar>::iterator& pos)
 {
     tpl_acc = *pos;
+    verbose("(parseShortTPL) tpl_acc %02x", tpl_acc);
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-acc-field", tpl_acc);
 
     tpl_sts = *pos;
+    verbose("(parseShortTPL) tpl_sts %02x", tpl_sts);
     tpl_sts_offset = distance(frame.begin(), pos);
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-sts-field (%s)", tpl_sts, decodeTPLStatusByteOnlyStandardBits(tpl_sts).c_str());
+    verbose("(parseShortTPL) tpl_cfg %02x %02x", *pos, *(pos + 1));
     bool ok = parseTPLConfig(pos);
+    verbose("(parseShortTPL) parseTOKConfig %d", ok);
     if (!ok) return false;
 
     return true;
@@ -2063,6 +2067,7 @@ bool Telegram::parse_TPL_7A(vector<uchar>::iterator& pos)
     if (decrypt_ok)
     {
         parseDV(this, frame, pos, remaining, &dv_entries);
+        verbose("(parse_TPL_7A) parseDV return");
     }
     else
     {

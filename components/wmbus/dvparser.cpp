@@ -1097,7 +1097,7 @@ bool parseDV(Telegram* t,
     size_t format_len,
     uint16_t* format_hash)
 {
-     std::map<string, int> dv_count;
+    std::map<string, int> dv_count;
     vector<uchar> format_bytes;
     vector<uchar> id_bytes;
     vector<uchar> data_bytes;
@@ -1124,11 +1124,12 @@ bool parseDV(Telegram* t,
         data_has_difvifs = false;
         format_end = *format + format_len;
         string s = bin2hex(*format, format_end, format_len);
-        debug("(dvparser) using format \"%s\"", s.c_str());
+        //debug("(dvparser) using format \"%s\"", s.c_str());
+        verbose("(dvparser) using format \"%s\"", s.c_str());
     }
 
     dv_entries->clear();
-
+    verbose("(dvparser) dv_entries->clear()");
     // Data format is:
 
     // DIF byte (defines how the binary data bits should be decoded and howy man data bytes there are)
