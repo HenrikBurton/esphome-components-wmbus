@@ -2225,7 +2225,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Parse DLL Data Link Layer for Wireless MBUS. │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-
+    verbose("(Telegram) before parseDLL()");
     ok = parseDLL(pos);
     if (!ok) return false;
 
@@ -2236,7 +2236,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this an ELL block?                        │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-
+    verbose("(Telegram) before parseELL()");
     ok = parseELL(pos);
     if (!ok) return false;
 
@@ -2248,7 +2248,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this an NWL block?                        │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-
+    verbose("(Telegram) before parseNWL()");
     ok = parseNWL(pos);
     if (!ok) return false;
 
@@ -2259,7 +2259,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this an AFL block?                        │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-
+    verbose("(Telegram) before parseAFL()");
     ok = parseAFL(pos);
     if (!ok) return false;
 
@@ -2270,7 +2270,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this a TPL block? It ought to be!         │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-
+    verbose("(Telegram) before parseTPL()");
     ok = parseTPL(pos);
     if (!ok) return false;
 
