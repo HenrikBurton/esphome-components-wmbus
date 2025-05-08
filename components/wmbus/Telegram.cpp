@@ -2052,13 +2052,14 @@ bool Telegram::parse_TPL_79(vector<uchar>::iterator& pos)
 bool Telegram::parse_TPL_7A(vector<uchar>::iterator& pos)
 {
     bool ok = parseShortTPL(pos);
+    verbose("(parse_TPL_7A) parseShortTPL return %d", ok);
     if (!ok) return false;
 
     bool decrypt_ok = potentiallyDecrypt(pos);
-
+    verbose("(parse_TPL_7A) potentialDecrypt %d", decrypt_ok);
     header_size = distance(frame.begin(), pos);
     int remaining = distance(pos, frame.end()) - suffix_size;
-
+    verbose("(parse_TPL_7A) header_size %d, remaining %d", header_size, remaining);
     if (decrypt_ok)
     {
         parseDV(this, frame, pos, remaining, &dv_entries);
@@ -2099,7 +2100,7 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
         "%02x tpl-ci-field (%s)",
         tpl_ci, ciType(tpl_ci).c_str());
     int len = ciFieldLength(tpl_ci);
-    verbose("(Telegram) before checkLength() %d", len);
+    verbose("(Telegram) before checkLength() %d %d %d", remaining, len, mfct_specific);
     if (remaining < len + 1 && !mfct_specific) return expectedMore(__LINE__);
     verbose("(Telegram) before switch()");
     switch (tpl_ci)
