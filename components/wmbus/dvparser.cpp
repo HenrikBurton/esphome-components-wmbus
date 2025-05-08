@@ -1492,7 +1492,7 @@ bool parseDV(Telegram* t,
         if (value.length() > 0) {
             // This call increments data with datalen.
             t->addExplanationAndIncrementPos(data, datalen, KindOfData::CONTENT, Understanding::NONE, "%s", value.c_str());
-            /DEBUG_PARSER("(dvparser debug) data \"%s\"", value.c_str());
+            //DEBUG_PARSER("(dvparser debug) data \"%s\"", value.c_str());
             verbose("(dvparser debug) data \"%s\"", value.c_str());
         }
         if (remaining == datalen || data == databytes.end()) {
