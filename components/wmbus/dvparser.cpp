@@ -1183,7 +1183,7 @@ bool parseDV(Telegram* t,
         MeasurementType mt = difMeasurementType(dif);
         int datalen = difLenBytes(dif);
         //DEBUG_PARSER("(dvparser debug) dif=%02x datalen=%d \"%s\" type=%s", dif, datalen, difType(dif).c_str(),
-            measurementTypeName(mt).c_str());
+        //    measurementTypeName(mt).c_str());
         verbose("(dvparser debug) dif=%02x datalen=%d \"%s\" type=%s", dif, datalen, difType(dif).c_str(),
             measurementTypeName(mt).c_str());
 
