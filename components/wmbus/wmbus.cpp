@@ -74,7 +74,6 @@ namespace wmbus {
         bool meter_in_config = (this->wmbus_listeners_.count(meter_id) == 1) ? true : false;
         
         if (this->log_all_ || meter_in_config) { //No need to do sth if logging is disabled and meter is not configured
-
           auto detected_drv_info      = pickMeterDriver(&t);
           std::string detected_driver = (detected_drv_info.name().str().empty() ? "" : detected_drv_info.name().str().c_str());
 
@@ -134,11 +133,12 @@ namespace wmbus {
               MeterInfo mi;
               ESP_LOGD(TAG, "Used driver %s, AES %s, Key %s", used_driver.c_str(), t.addresses[0].id.c_str(), sensor->myKey.c_str());
               mi.parse("ESPHome", used_driver, t.addresses[0].id + ",", sensor->myKey);
-
+              ESP_LOGD(TAG, "Before createMeter()");
               auto meter = createMeter(&mi);
 
               std::vector<Address> addresses;
               AboutTelegram about{"ESPHome wM-Bus", mbus_data.rssi, FrameType::WMBUS, this->frame_timestamp_};
+              ESP_LOGD(TAG, "handleTelegram()");
               meter->handleTelegram(about, mbus_data.frame, false, &addresses, &id_match, &t);
               if (id_match) {
                 for (auto const& field : sensor->fields) {
