@@ -1486,7 +1486,7 @@ bool parseDV(Telegram* t,
             //debug("[DVPARSER] entry %s", dve->str().c_str());
             verbose("[DVPARSER] entry %s", dve->str().c_str());
         }
-
+        verbose("(dvparser debug) before assert key %s %s", key.c_str(), dve->dif_vif_key.str().c_str());
         assert(key == dve->dif_vif_key.str());
 
         if (value.length() > 0) {
