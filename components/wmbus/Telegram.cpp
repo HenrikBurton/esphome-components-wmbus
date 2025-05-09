@@ -1639,18 +1639,18 @@ string decodeTPLStatusByteWithMfct(uchar sts, Translate::Lookup& lookup)
 bool Telegram::parseShortTPL(std::vector<uchar>::iterator& pos)
 {
     tpl_acc = *pos;
-    verbose("(parseShortTPL) tpl_acc %02x", tpl_acc);
+
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-acc-field", tpl_acc);
 
     tpl_sts = *pos;
-    verbose("(parseShortTPL) tpl_sts %02x", tpl_sts);
+
     tpl_sts_offset = distance(frame.begin(), pos);
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-sts-field (%s)", tpl_sts, decodeTPLStatusByteOnlyStandardBits(tpl_sts).c_str());
-    verbose("(parseShortTPL) tpl_cfg %02x %02x", *pos, *(pos + 1));
+
     bool ok = parseTPLConfig(pos);
-    verbose("(parseShortTPL) parseTPLConfig %d", ok);
+
     if (!ok) return false;
 
     return true;
@@ -2056,18 +2056,17 @@ bool Telegram::parse_TPL_79(vector<uchar>::iterator& pos)
 bool Telegram::parse_TPL_7A(vector<uchar>::iterator& pos)
 {
     bool ok = parseShortTPL(pos);
-    verbose("(parse_TPL_7A) parseShortTPL return %d", ok);
+
     if (!ok) return false;
 
     bool decrypt_ok = potentiallyDecrypt(pos);
-    verbose("(parse_TPL_7A) potentialDecrypt %d", decrypt_ok);
+
     header_size = distance(frame.begin(), pos);
     int remaining = distance(pos, frame.end()) - suffix_size;
-    verbose("(parse_TPL_7A) header_size %d, remaining %d", header_size, remaining);
+
     if (decrypt_ok)
     {
         parseDV(this, frame, pos, remaining, &dv_entries);
-        verbose("(parse_TPL_7A) parseDV return");
     }
     else
     {
@@ -2081,8 +2080,7 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
     int remaining = distance(pos, frame.end());
     if (remaining == 0) return false;
 
-    //debug("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
-    verbose("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
+    debug("(wmbus) parseTPL @%d %d", distance(frame.begin(), pos), remaining);
 
     int ci_field = *pos;
     int mfct_specific = isCiFieldManufacturerSpecific(ci_field);
@@ -2100,14 +2098,14 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
     }
     tpl_ci = ci_field;
     tpl_start = pos;
-    verbose("(Telegram) before addExplanationAndIncrementPos()");
+
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-ci-field (%s)",
         tpl_ci, ciType(tpl_ci).c_str());
     int len = ciFieldLength(tpl_ci);
-    verbose("(Telegram) before checkLength() %d %d %d", remaining, len, mfct_specific);
+
     if (remaining < len + 1 && !mfct_specific) return expectedMore(__LINE__);
-    verbose("(Telegram) before switch()");
+
     switch (tpl_ci)
     {
     case CI_Field_Values::TPL_72: return parse_TPL_72(pos);
@@ -2126,7 +2124,7 @@ bool Telegram::parseTPL(vector<uchar>::iterator& pos)
         return true; // Manufacturer specific telegram payload. Oh well....
     }
     }
-    verbose("(Telegram) before distance()");
+
     header_size = distance(frame.begin(), pos);
     if (parser_warns_)
     {
@@ -2232,7 +2230,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Parse DLL Data Link Layer for Wireless MBUS. │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-    verbose("(Telegram) before parseDLL()");
+
     ok = parseDLL(pos);
     if (!ok) return false;
 
@@ -2243,7 +2241,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this an ELL block?                        │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-    verbose("(Telegram) before parseELL()");
+
     ok = parseELL(pos);
     if (!ok) return false;
 
@@ -2255,7 +2253,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this an NWL block?                        │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-    verbose("(Telegram) before parseNWL()");
+
     ok = parseNWL(pos);
     if (!ok) return false;
 
@@ -2266,7 +2264,7 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this an AFL block?                        │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-    verbose("(Telegram) before parseAFL()");
+
     ok = parseAFL(pos);
     if (!ok) return false;
 
@@ -2277,13 +2275,13 @@ bool Telegram::parseWMBUS(vector<uchar>& input_frame, MeterKeys* mk, bool warn)
     //     │ Is this a TPL block? It ought to be!         │
     //     │                                              │
     //     └──────────────────────────────────────────────┘
-    verbose("(Telegram) before parseTPL()");
+
     ok = parseTPL(pos);
     if (!ok) return false;
 
     printTPL();
     if (decryption_failed) return false;
-    verbose("(Telegram) sucessfully parsed TPL");
+
     return true;
 }
 
@@ -3180,7 +3178,6 @@ bool Telegram::findFormatBytesFromKnownMeterSignatures(vector<uchar>* format_byt
 
 bool handleTelegram(AboutTelegram& about, vector<uchar> frame)
 {
-    verbose("(wmbus) incide wmbus.cc");
     bool handled = false;
 
     assert(frame.size() > 0);
