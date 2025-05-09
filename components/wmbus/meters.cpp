@@ -917,14 +917,14 @@ bool MeterCommonImplementation::handleTelegram(AboutTelegram &about, vector<ucha
     {
         out_analyzed->force_mfct_index = force_mfct_index_;
     }
-    verbose("(meter) Before parse()");
+
     ok = out_analyzed->parse(input_frame, &meter_keys_, true);
     if (!ok)
     {
         // Ignoring telegram since it could not be parsed.
         return false;
     }
-    verbose("(meter)Before processFieldExtractors()");
+
     // Invoke standardized field extractors!
     processFieldExtractors(out_analyzed);
     if (hasProcessContent())
@@ -933,9 +933,9 @@ bool MeterCommonImplementation::handleTelegram(AboutTelegram &about, vector<ucha
         processContent(out_analyzed);
     }
     // Invoke any calculators working on the extracted fields.
-    verbose(("Before processFieldCalculators()"));
+
     processFieldCalculators();
-    verbose(("After processFieldCalculators()"));
+
     // All done....
     triggerUpdate(out_analyzed);
     return true;
@@ -1462,11 +1462,9 @@ bool MeterInfo::parse(string n, string d, string aes, string k)
 
     if (!is_driver_and_extras(d, &driver_name, &extras))
     {
-        verbose("is_driver_and_extras failed");
         return false;
     }
 
-    verbose("(parse) name %s, key %s", name.c_str(), key.c_str());
     return true;
 }
 
