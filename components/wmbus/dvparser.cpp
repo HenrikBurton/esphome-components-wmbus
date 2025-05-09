@@ -1480,11 +1480,11 @@ bool parseDV(Telegram* t,
                                                value) };
         verbose("(dvparser debug) before setting dve");
         DVEntry* dve = &(*dv_entries)[key].second;
-        verbose("(dvparser debug) after setting dve");
+        verbose("(dvparser debug) after setting dve %08x", (unsigned long)dve);
         if (isTraceEnabled())
         {
             //debug("[DVPARSER] entry %s", dve->str().c_str());
-            verbose("[DVPARSER] entry %s", dve->str().c_str());
+            verbose("[DVPARSER] entry %s", dve->dif_vif_key.str().c_str());
         }
         verbose("(dvparser debug) before assert key %s %s", key.c_str(), dve->dif_vif_key.str().c_str());
         assert(key == dve->dif_vif_key.str());
