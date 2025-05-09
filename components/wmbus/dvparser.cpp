@@ -1467,7 +1467,7 @@ bool parseDV(Telegram* t,
 
         string value = bin2hex(data, data_end, datalen);
         int offset = start_parse_here + data - data_start;
-
+        verbose("(dvparser debug) before DVEntry");
         (*dv_entries)[key] = { offset, DVEntry(offset,
                                                key,
                                                mt,
@@ -1478,9 +1478,9 @@ bool parseDV(Telegram* t,
                                                TariffNr(tariff),
                                                SubUnitNr(subunit),
                                                value) };
-
+        verbose("(dvparser debug) before setting dve");
         DVEntry* dve = &(*dv_entries)[key].second;
-
+        verbose("(dvparser debug) after setting dve");
         if (isTraceEnabled())
         {
             //debug("[DVPARSER] entry %s", dve->str().c_str());
