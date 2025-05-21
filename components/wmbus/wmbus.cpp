@@ -12,8 +12,8 @@
 #endif
 
 #ifdef USE_ESP32
-SET_LOOP_TASK_STACK_SIZE(32 * 1024);
-#pragma message ( "Loop task stack increased." )
+//SET_LOOP_TASK_STACK_SIZE(32 * 1024);
+//#pragma message ( "Loop task stack increased." )
 #endif
 #ifdef USE_ESP8266
 #error "ESP8266 not supported. Please use version 3.x: https://github.com/SzczepanLeon/esphome-components/issues/131"
@@ -29,20 +29,22 @@ namespace wmbus {
   }
 
   void WMBusComponent::setup() {
-    this->high_freq_.start();
+
     if (this->led_pin_ != nullptr) {
       this->led_pin_->setup();
       this->led_pin_->digital_write(false);
       this->led_on_ = false;
     }
-    if (!rf_mbus_.init(this->spi_conf_.mosi->get_pin(), this->spi_conf_.miso->get_pin(),
-                       this->spi_conf_.clk->get_pin(),  this->spi_conf_.cs->get_pin(),
-                       this->spi_conf_.gdo0->get_pin(), this->spi_conf_.gdo2->get_pin(),
-                       this->frequency_, this->sync_mode_)) {
+
+    if (!rf_mbus_.init(this->spi_conf_.gdo0, this->spi_conf_.gdo2,
+                       this->spi_conf_.reset, this->frequency_, this->sync_mode_)) {
       this->mark_failed();
       ESP_LOGE(TAG, "RF chip initialization failed");
       return;
     }
+
+    this->high_freq_.start();
+
 #ifdef USE_WMBUS_MQTT
     this->mqtt_client_.setClient(this->tcp_client_);
     this->mqtt_client_.setServer(this->mqtt_->ip, this->mqtt_->port);
@@ -52,15 +54,17 @@ namespace wmbus {
 
   void WMBusComponent::loop() {
     this->led_handler();
+
     if (rf_mbus_.task()) {
       ESP_LOGVV(TAG, "Have data from RF ...");
-      WMbusFrame mbus_data = rf_mbus_.get_frame();
 
+      WMbusFrame mbus_data = rf_mbus_.get_frame();
       std::string telegram = format_hex_pretty(mbus_data.frame);
       telegram.erase(std::remove(telegram.begin(), telegram.end(), '.'), telegram.end());
 
       this->frame_timestamp_ = this->time_->timestamp_now();
-      send_to_clients(mbus_data);
+//      send_to_clients(mbus_data);
+
       Telegram t;
       if (t.parseHeader(mbus_data.frame) && t.addresses.empty()) {
         ESP_LOGE(TAG, "Address is empty! T: %s", telegram.c_str());
@@ -70,7 +74,6 @@ namespace wmbus {
         bool meter_in_config = (this->wmbus_listeners_.count(meter_id) == 1) ? true : false;
         
         if (this->log_all_ || meter_in_config) { //No need to do sth if logging is disabled and meter is not configured
-
           auto detected_drv_info      = pickMeterDriver(&t);
           std::string detected_driver = (detected_drv_info.name().str().empty() ? "" : detected_drv_info.name().str().c_str());
 
@@ -128,10 +131,14 @@ namespace wmbus {
               
               bool id_match;
               MeterInfo mi;
+              ESP_LOGD(TAG, "Used driver %s, AES %s, Key %s", used_driver.c_str(), t.addresses[0].id.c_str(), sensor->myKey.c_str());
               mi.parse("ESPHome", used_driver, t.addresses[0].id + ",", sensor->myKey);
+
               auto meter = createMeter(&mi);
+
               std::vector<Address> addresses;
               AboutTelegram about{"ESPHome wM-Bus", mbus_data.rssi, FrameType::WMBUS, this->frame_timestamp_};
+
               meter->handleTelegram(about, mbus_data.frame, false, &addresses, &id_match, &t);
               if (id_match) {
                 for (auto const& field : sensor->fields) {
@@ -168,7 +175,8 @@ namespace wmbus {
                     ESP_LOGW(TAG, "Can't get requested field '%s'", field.first.c_str());
                   }
                 }
-#ifdef USE_WMBUS_MQTT
+/*
+                #ifdef USE_WMBUS_MQTT
                 std::string json;
                 meter->printJsonMeter(&t, &json, false);
                 std::string mqtt_topic = (App.get_friendly_name().empty() ? App.get_name() : App.get_friendly_name()) + "/wmbus/" + t.addresses[0].id;
@@ -186,6 +194,7 @@ namespace wmbus {
                 std::string mqtt_topic = this->mqtt_client_->get_topic_prefix() + "/wmbus/" + t.addresses[0].id;
                 this->mqtt_client_->publish(mqtt_topic, json);
 #endif
+*/
               }
               else {
                 ESP_LOGE(TAG, "Not for me T: %s", telegram.c_str());
@@ -227,7 +236,7 @@ namespace wmbus {
       }
     }
   }
-
+/*
   void WMBusComponent::send_to_clients(WMbusFrame &mbus_data) {
     for (auto & client : this->clients_) {
       switch (client.format) {
@@ -311,7 +320,7 @@ namespace wmbus {
       }
     }
   }
-
+*/
   const LogString *WMBusComponent::format_to_string(Format format) {
     switch (format) {
       case FORMAT_HEX:
@@ -353,19 +362,20 @@ namespace wmbus {
       ESP_LOGCONFIG(TAG, "    Duration: %d ms", this->led_blink_time_);
     }
 #ifdef USE_ESP32
-    ESP_LOGCONFIG(TAG, "  Chip ID: %012llX", ESP.getEfuseMac());
+    //ESP_LOGCONFIG(TAG, "  Chip ID: %012llX", ESP.getEfuseMac());
 #endif
-    ESP_LOGCONFIG(TAG, "  CC1101 frequency: %3.3f MHz", this->frequency_);
-    ESP_LOGCONFIG(TAG, "  CC1101 SPI bus:");
+    ESP_LOGCONFIG(TAG, "  SX1262 frequency: %3.3f MHz", this->frequency_);
+    ESP_LOGCONFIG(TAG, "  SX1262 SPI bus:");
     if (this->is_failed()) {
-      ESP_LOGE(TAG, "   Check connection to CC1101!");
+      ESP_LOGE(TAG, "   Check connection to SX1262!");
     }
-    LOG_PIN("    MOSI Pin: ", this->spi_conf_.mosi);
-    LOG_PIN("    MISO Pin: ", this->spi_conf_.miso);
-    LOG_PIN("    CLK Pin:  ", this->spi_conf_.clk);
-    LOG_PIN("    CS Pin:   ", this->spi_conf_.cs);
+//    LOG_PIN("    MOSI Pin: ", this->spi_conf_.mosi);
+//    LOG_PIN("    MISO Pin: ", this->spi_conf_.miso);
+//    LOG_PIN("    CLK Pin:  ", this->spi_conf_.clk);
+//    LOG_PIN("    CS Pin:   ", this->spi_conf_.cs);
     LOG_PIN("    GDO0 Pin: ", this->spi_conf_.gdo0);
     LOG_PIN("    GDO2 Pin: ", this->spi_conf_.gdo2);
+    LOG_PIN("    RESET Pin: ", this->spi_conf_.reset);
     std::string drivers = "";
     for (DriverInfo* p : allDrivers()) {
       drivers += p->name().str() + ", ";

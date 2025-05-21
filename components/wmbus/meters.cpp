@@ -717,7 +717,9 @@ void MeterCommonImplementation::triggerUpdate(Telegram* t)
     num_updates_++;
     for (auto& cb : on_update_) if (cb) cb(t, this);
     t->handled = true;
-    addStringField("timestamp", "TimeStamp", PrintProperty::HIDE);
+    if (NULL == findFieldInfo("timestamp", Quantity::Text)) {
+      addStringField("timestamp", "TimeStamp", PrintProperty::HIDE);
+    }
     setStringValue("timestamp", datetimeOfUpdateRobot());
 }
 
@@ -931,6 +933,7 @@ bool MeterCommonImplementation::handleTelegram(AboutTelegram &about, vector<ucha
         processContent(out_analyzed);
     }
     // Invoke any calculators working on the extracted fields.
+
     processFieldCalculators();
 
     // All done....
@@ -1966,6 +1969,7 @@ shared_ptr<Meter> createMeter(MeterInfo* mi)
     if (di != NULL)
     {
         shared_ptr<Meter> newm = di->construct(*mi);
+
         for (string& j : mi->extra_calculated_fields)
         {
             newm->addExtraCalculatedField(j);

@@ -4,6 +4,7 @@
 #include "esphome/core/gpio.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/component.h"
+#include "esphome/components/spi/spi.h"
 #include "esphome/components/network/ip_address.h"
 #include "esphome/components/sensor/sensor.h"
 #include "esphome/components/text_sensor/text_sensor.h"
@@ -23,17 +24,20 @@
 #include <utility>
 #include <string>
 
-#include "rf_cc1101.h"
+#include "rf_sx1262.h"
 #include "m_bus_data.h"
 #include "crc.h"
 
 #include "utils.h"
-
+/*
 #include <WiFiClient.h>
 #include <WiFiUdp.h>
-
+*/
 
 namespace esphome {
+
+/*  class SPIComponent;  */
+
 namespace wmbus {
 
   enum Format : uint8_t {
@@ -84,13 +88,10 @@ namespace wmbus {
       bool hex_to_bin(const char* src, std::vector<unsigned char> *target);
   };
 
-  struct Cc1101 {
-    InternalGPIOPin *mosi{nullptr};
-    InternalGPIOPin *miso{nullptr};
-    InternalGPIOPin *clk{nullptr};
-    InternalGPIOPin *cs{nullptr};
+  struct Sx1262Pins {
     InternalGPIOPin *gdo0{nullptr};
     InternalGPIOPin *gdo2{nullptr};
+    InternalGPIOPin *reset{nullptr};
   };
 
   class InfoComponent : public Component {
@@ -98,8 +99,12 @@ namespace wmbus {
       void setup() override;
       float get_setup_priority() const override { return setup_priority::PROCESSOR; }
   };
-
+/*
+  class WMBusComponent : public Component,
+                         public spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW, 
+                                               spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_200KHZ> { */
   class WMBusComponent : public Component {
+    
     public:
       void setup() override;
       void loop() override;
@@ -108,16 +113,11 @@ namespace wmbus {
       void set_led_pin(GPIOPin *led) { this->led_pin_ = led; }
       void set_led_blink_time(uint32_t led_blink_time) { this->led_blink_time_ = led_blink_time; }
       void register_wmbus_listener(const uint32_t meter_id, const std::string type, const std::string key);
-      void add_cc1101(InternalGPIOPin *mosi, InternalGPIOPin *miso,
-                      InternalGPIOPin *clk, InternalGPIOPin *cs,
-                      InternalGPIOPin *gdo0, InternalGPIOPin *gdo2,
+      void add_sx1262(InternalGPIOPin *gdo0, InternalGPIOPin *gdo2, InternalGPIOPin *reset,
                       double frequency, bool sync_mode) {
-        this->spi_conf_.mosi = mosi;
-        this->spi_conf_.miso = miso;
-        this->spi_conf_.clk  = clk;
-        this->spi_conf_.cs   = cs;
         this->spi_conf_.gdo0 = gdo0;
         this->spi_conf_.gdo2 = gdo2;
+        this->spi_conf_.reset = reset;
         this->frequency_ = frequency;
         this->sync_mode_ = sync_mode;
       }
@@ -131,12 +131,17 @@ namespace wmbus {
           this->wmbus_listeners_[meter_id]->add_sensor(field, sensor);
         }
       }
+      void set_spi_parent(spi::SPIComponent *parent) { this->rf_mbus_.set_spi_parent(parent); }
+      void set_cs_pin(GPIOPin *cs_pin) { this->rf_mbus_.set_cs_pin(cs_pin); }
+      void set_data_rate(uint32_t data_rate) { this->rf_mbus_.set_data_rate(data_rate); }
+/*
 #ifdef USE_ETHERNET
       void set_eth(ethernet::EthernetComponent *eth_component) { this->net_component_ = eth_component; }
 #elif defined(USE_WIFI)
       void set_wifi(wifi::WiFiComponent *wifi_component) { this->net_component_ = wifi_component; }
 #endif
       void set_time(time::RealTimeClock *time) { this->time_ = time; }
+      */
 #ifdef USE_WMBUS_MQTT
       void set_mqtt(const std::string name,
                     const std::string password,
@@ -167,24 +172,26 @@ namespace wmbus {
       void led_handler();
       HighFrequencyLoopRequester high_freq_;
       GPIOPin *led_pin_{nullptr};
-      Cc1101 spi_conf_{};
+      Sx1262Pins spi_conf_{};
       double frequency_{};
       bool sync_mode_{false};
       std::map<uint32_t, WMBusListener *> wmbus_listeners_{};
       std::vector<Client> clients_{};
-      WiFiClient tcp_client_;
-      WiFiUDP udp_client_;
+//      WiFiClient tcp_client_;
+//      WiFiUDP udp_client_;
       time::RealTimeClock *time_{nullptr};
       uint32_t led_blink_time_{0};
       uint32_t led_on_millis_{0};
       bool led_on_{false};
       bool log_all_{false};
       RxLoop rf_mbus_;
+/*
 #ifdef USE_ETHERNET
       ethernet::EthernetComponent *net_component_{nullptr};
 #elif defined(USE_WIFI)
       wifi::WiFiComponent *net_component_{nullptr};
 #endif
+*/
 #ifdef USE_WMBUS_MQTT
       PubSubClient mqtt_client_;
       MqttClient *mqtt_{nullptr};
@@ -192,6 +199,7 @@ namespace wmbus {
       mqtt::MQTTClientComponent *mqtt_client_{nullptr};
 #endif
       time_t frame_timestamp_;
+
   };
 
 }  // namespace wmbus

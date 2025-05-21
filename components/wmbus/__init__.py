@@ -1,5 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
+from esphome.components import spi
 from esphome import pins
 from esphome.log import Fore, color
 from esphome.components import time
@@ -25,6 +26,8 @@ from esphome.const import (
     CONF_USERNAME,
     CONF_PASSWORD,
     CONF_RETAIN,
+    CONF_RESET_PIN,
+    CONF_DEVICE,
 )
 
 from esphome.const import SOURCE_FILE_EXTENSIONS
@@ -46,11 +49,11 @@ CONF_WIFI_REF = "wmbus_wifi_id"
 
 CODEOWNERS = ["@SzczepanLeon"]
 
-DEPENDENCIES = ["time"]
+DEPENDENCIES = ["time", "spi"]
 AUTO_LOAD = ["sensor", "text_sensor"]
 
 wmbus_ns = cg.esphome_ns.namespace('wmbus')
-WMBusComponent = wmbus_ns.class_('WMBusComponent', cg.Component)
+WMBusComponent = wmbus_ns.class_('WMBusComponent', cg.Component, spi.SPIDevice)
 InfoComponent = wmbus_ns.class_('InfoComponent', cg.Component)
 Client = wmbus_ns.struct('Client')
 Format = wmbus_ns.enum("Format")
@@ -87,28 +90,29 @@ WMBUS_MQTT_SCHEMA = cv.Schema({
     cv.Optional(CONF_RETAIN,  default=False): cv.boolean,
 })
 
-CONFIG_SCHEMA = cv.Schema({
-    cv.GenerateID(CONF_INFO_COMP_ID):                  cv.declare_id(InfoComponent),
-    cv.GenerateID():                                   cv.declare_id(WMBusComponent),
-    cv.OnlyWith(CONF_MQTT_ID, "mqtt"):                 cv.use_id(mqtt.MQTTClientComponent),
-    cv.OnlyWith(CONF_TIME_ID, "time"):                 cv.use_id(time.RealTimeClock),
-    cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
-    cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
-    cv.Optional(CONF_MOSI_PIN,       default=13):      pins.internal_gpio_output_pin_schema,
-    cv.Optional(CONF_MISO_PIN,       default=12):      pins.internal_gpio_input_pin_schema,
-    cv.Optional(CONF_CLK_PIN,        default=14):      pins.internal_gpio_output_pin_schema,
-    cv.Optional(CONF_CS_PIN,         default=2):       pins.internal_gpio_output_pin_schema,
-    cv.Optional(CONF_GDO0_PIN,       default=5):       pins.internal_gpio_input_pin_schema,
-    cv.Optional(CONF_GDO2_PIN,       default=4):       pins.internal_gpio_input_pin_schema,
-    cv.Optional(CONF_LED_PIN):                         pins.gpio_output_pin_schema,
-    cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
-    cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
-    cv.Optional(CONF_ALL_DRIVERS,    default=False):   cv.boolean,
-    cv.Optional(CONF_CLIENTS):                         cv.ensure_list(CLIENT_SCHEMA),
-    cv.Optional(CONF_FREQUENCY,      default=868.950): cv.float_range(min=300, max=928),
-    cv.Optional(CONF_SYNC_MODE,      default=False):   cv.boolean,
-    cv.Optional(CONF_MQTT):                            cv.ensure_schema(WMBUS_MQTT_SCHEMA),
-})
+CONFIG_SCHEMA = (
+    cv.Schema({
+        cv.GenerateID(CONF_INFO_COMP_ID):                  cv.declare_id(InfoComponent),
+        cv.GenerateID():                                   cv.declare_id(WMBusComponent),
+        cv.OnlyWith(CONF_MQTT_ID, "mqtt"):                 cv.use_id(mqtt.MQTTClientComponent),
+        cv.OnlyWith(CONF_TIME_ID, "time"):                 cv.use_id(time.RealTimeClock),
+        cv.OnlyWith(CONF_WIFI_REF, "wifi"):                cv.use_id(wifi.WiFiComponent),
+        cv.OnlyWith(CONF_ETH_REF, "ethernet"):             cv.use_id(ethernet.EthernetComponent),
+        cv.Optional(CONF_CS_PIN,         default=2):       pins.internal_gpio_output_pin_schema,
+        cv.Optional(CONF_GDO0_PIN,       default=5):       pins.internal_gpio_input_pin_schema,
+        cv.Optional(CONF_GDO2_PIN,       default=4):       pins.internal_gpio_input_pin_schema,
+        cv.Optional(CONF_RESET_PIN,      default=3):       pins.internal_gpio_output_pin_schema,
+        cv.Optional(CONF_LED_PIN):                         pins.gpio_output_pin_schema,
+        cv.Optional(CONF_LED_BLINK_TIME, default="200ms"): cv.positive_time_period,
+        cv.Optional(CONF_LOG_ALL,        default=False):   cv.boolean,
+        cv.Optional(CONF_ALL_DRIVERS,    default=False):   cv.boolean,
+        cv.Optional(CONF_CLIENTS):                         cv.ensure_list(CLIENT_SCHEMA),
+        cv.Optional(CONF_FREQUENCY,      default=868.950): cv.float_range(min=300, max=928),
+        cv.Optional(CONF_SYNC_MODE,      default=False):   cv.boolean,
+        cv.Optional(CONF_MQTT):                            cv.ensure_schema(WMBUS_MQTT_SCHEMA),
+    }).extend(cv.COMPONENT_SCHEMA)
+      .extend(spi.spi_device_schema(cs_pin_required=True))
+)
 
 def safe_ip(ip):
     if ip is None:
@@ -125,18 +129,16 @@ async def to_code(config):
 
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
+    await spi.register_spi_device(var, config)
 
-    mosi = await cg.gpio_pin_expression(config[CONF_MOSI_PIN])
-    miso = await cg.gpio_pin_expression(config[CONF_MISO_PIN])
-    clk  = await cg.gpio_pin_expression(config[CONF_CLK_PIN])
-    cs   = await cg.gpio_pin_expression(config[CONF_CS_PIN])
-    gdo0 = await cg.gpio_pin_expression(config[CONF_GDO0_PIN])
-    gdo2 = await cg.gpio_pin_expression(config[CONF_GDO2_PIN])
+    gdo0  = await cg.gpio_pin_expression(config[CONF_GDO0_PIN])
+    gdo2  = await cg.gpio_pin_expression(config[CONF_GDO2_PIN])
+    reset = await cg.gpio_pin_expression(config[CONF_RESET_PIN])
 
-    cg.add(var.add_cc1101(mosi, miso, clk, cs, gdo0, gdo2, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
+    cg.add(var.add_sx1262(gdo0, gdo2, reset, config[CONF_FREQUENCY], config[CONF_SYNC_MODE]))
 
     time = await cg.get_variable(config[CONF_TIME_ID])
-    cg.add(var.set_time(time))
+#    cg.add(var.set_time(time))
 
 
     if config.get(CONF_ETH_REF):
@@ -145,7 +147,7 @@ async def to_code(config):
 
     if config.get(CONF_WIFI_REF):
         wifi = await cg.get_variable(config[CONF_WIFI_REF])
-        cg.add(var.set_wifi(wifi))
+#        cg.add(var.set_wifi(wifi))
 
     if config.get(CONF_MQTT_ID):
         mqtt = await cg.get_variable(config[CONF_MQTT_ID])
@@ -174,9 +176,6 @@ async def to_code(config):
         led_pin = await cg.gpio_pin_expression(config[CONF_LED_PIN])
         cg.add(var.set_led_pin(led_pin))
         cg.add(var.set_led_blink_time(config[CONF_LED_BLINK_TIME].total_milliseconds))
-
-    cg.add_library("SPI", None)
-    cg.add_library("LSatan/SmartRC-CC1101-Driver-Lib", "2.5.7")
 
     cg.add_platformio_option("build_src_filter", ["+<*>", "-<.git/>", "-<.svn/>"])
 

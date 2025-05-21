@@ -1639,14 +1639,18 @@ string decodeTPLStatusByteWithMfct(uchar sts, Translate::Lookup& lookup)
 bool Telegram::parseShortTPL(std::vector<uchar>::iterator& pos)
 {
     tpl_acc = *pos;
+
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-acc-field", tpl_acc);
 
     tpl_sts = *pos;
+
     tpl_sts_offset = distance(frame.begin(), pos);
     addExplanationAndIncrementPos(pos, 1, KindOfData::PROTOCOL, Understanding::FULL,
         "%02x tpl-sts-field (%s)", tpl_sts, decodeTPLStatusByteOnlyStandardBits(tpl_sts).c_str());
+
     bool ok = parseTPLConfig(pos);
+
     if (!ok) return false;
 
     return true;
@@ -2052,6 +2056,7 @@ bool Telegram::parse_TPL_79(vector<uchar>::iterator& pos)
 bool Telegram::parse_TPL_7A(vector<uchar>::iterator& pos)
 {
     bool ok = parseShortTPL(pos);
+
     if (!ok) return false;
 
     bool decrypt_ok = potentiallyDecrypt(pos);
@@ -3173,7 +3178,6 @@ bool Telegram::findFormatBytesFromKnownMeterSignatures(vector<uchar>* format_byt
 
 bool handleTelegram(AboutTelegram& about, vector<uchar> frame)
 {
-    verbose("(wmbus) incide wmbus.cc");
     bool handled = false;
 
     assert(frame.size() > 0);

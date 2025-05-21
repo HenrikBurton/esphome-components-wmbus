@@ -1097,7 +1097,7 @@ bool parseDV(Telegram* t,
     size_t format_len,
     uint16_t* format_hash)
 {
-     std::map<string, int> dv_count;
+    std::map<string, int> dv_count;
     vector<uchar> format_bytes;
     vector<uchar> id_bytes;
     vector<uchar> data_bytes;
@@ -1311,6 +1311,7 @@ bool parseDV(Telegram* t,
         if (vif == 0x7c)
         {
             DEBUG_PARSER("(dvparser debug) variable length vif found");
+
             if (*format == format_end) { debug("(dvparser) warning: unexpected end of data (vif varlen expected)"); break; }
             uchar viflen = **format;
             id_bytes.push_back(viflen);
@@ -1444,6 +1445,7 @@ bool parseDV(Telegram* t,
             remaining--; // Drop the length byte.
         }
         DEBUG_PARSER("(dvparser debug) remaining data %d len=%d", remaining, datalen);
+
         if (remaining < datalen)
         {
             debug("(dvparser) warning: unexpected end of data");
@@ -1465,10 +1467,10 @@ bool parseDV(Telegram* t,
                                                value) };
 
         DVEntry* dve = &(*dv_entries)[key].second;
-
+;
         if (isTraceEnabled())
         {
-            debug("[DVPARSER] entry %s", dve->str().c_str());
+            debug("[DVPARSER] entry %s", dve->dif_vif_key.str().c_str());
         }
 
         assert(key == dve->dif_vif_key.str());

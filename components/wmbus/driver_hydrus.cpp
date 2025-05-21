@@ -46,7 +46,7 @@ namespace
     {
         addOptionalLibraryFields("operating_time_h,actuality_duration_s,meter_datetime,customer");
         addOptionalLibraryFields("flow_temperature_c,external_temperature_c");
-
+            
         addStringField(
             "status",
             "Status of meter.",
