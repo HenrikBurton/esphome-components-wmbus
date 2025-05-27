@@ -5,14 +5,14 @@ namespace wmbus {
 
   static const char *TAG = "rxLoop";
 
-  bool RxLoop::init(GPIOPin *gdo0, GPIOPin *gdo2, GPIOPin *reset, float freq, bool syncMode) {
+  bool RxLoop::init(GPIOPin *busy, GPIOPin *irq, GPIOPin *reset, float freq, bool syncMode) {
     bool retVal = false;
     this->syncMode = syncMode;
-    this->gdo0 = gdo0;
-    this->gdo2 = gdo2;
+    this->busy = busy;
+    this->irq = irq;
     this->reset = reset;
-    this->gdo0->setup();
-    this->gdo2->setup();
+    this->busy->setup();
+    this->irq->setup();
     this->reset->setup();
 
     this->spi_setup();
@@ -283,7 +283,7 @@ namespace wmbus {
     uint8_t respons[2];
             
     // Wait until device is not BUSY
-    while(this->gdo0->digital_read()){
+    while(this->busy->digital_read()){
         delay(1);
     }
     sx1262transaction(command, respons, sizeof(command));
@@ -499,7 +499,7 @@ namespace wmbus {
   void RxLoop::sx1262command(uint8_t *command, uint32_t length) {
             
     // Wait until device is not BUSY
-    while(this->gdo0->digital_read()){
+    while(this->busy->digital_read()){
       delay(1);
     }
     this->enable();
@@ -512,7 +512,7 @@ namespace wmbus {
 
   void RxLoop::sx1262transaction(uint8_t *command, uint8_t *respons, uint32_t length) {
     // Wait until device is not BUSY
-    while(this->gdo0->digital_read()){
+    while(this->busy->digital_read()){
       delay(1);
     }
     this->enable();

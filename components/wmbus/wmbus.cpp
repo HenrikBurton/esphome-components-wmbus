@@ -36,7 +36,7 @@ namespace wmbus {
       this->led_on_ = false;
     }
 
-    if (!rf_mbus_.init(this->spi_conf_.gdo0, this->spi_conf_.gdo2,
+    if (!rf_mbus_.init(this->spi_conf_.busy, this->spi_conf_.irq,
                        this->spi_conf_.reset, this->frequency_, this->sync_mode_)) {
       this->mark_failed();
       ESP_LOGE(TAG, "RF chip initialization failed");
@@ -373,8 +373,8 @@ namespace wmbus {
 //    LOG_PIN("    MISO Pin: ", this->spi_conf_.miso);
 //    LOG_PIN("    CLK Pin:  ", this->spi_conf_.clk);
 //    LOG_PIN("    CS Pin:   ", this->spi_conf_.cs);
-    LOG_PIN("    GDO0 Pin: ", this->spi_conf_.gdo0);
-    LOG_PIN("    GDO2 Pin: ", this->spi_conf_.gdo2);
+    LOG_PIN("    BUSY Pin: ", this->spi_conf_.busy);
+    LOG_PIN("    IRQ Pin:  ", this->spi_conf_.irq);
     LOG_PIN("    RESET Pin: ", this->spi_conf_.reset);
     std::string drivers = "";
     for (DriverInfo* p : allDrivers()) {

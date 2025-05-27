@@ -89,8 +89,8 @@ namespace wmbus {
   };
 
   struct Sx1262Pins {
-    InternalGPIOPin *gdo0{nullptr};
-    InternalGPIOPin *gdo2{nullptr};
+    InternalGPIOPin *busy{nullptr};
+    InternalGPIOPin *irq{nullptr};
     InternalGPIOPin *reset{nullptr};
   };
 
@@ -113,10 +113,10 @@ namespace wmbus {
       void set_led_pin(GPIOPin *led) { this->led_pin_ = led; }
       void set_led_blink_time(uint32_t led_blink_time) { this->led_blink_time_ = led_blink_time; }
       void register_wmbus_listener(const uint32_t meter_id, const std::string type, const std::string key);
-      void add_sx1262(InternalGPIOPin *gdo0, InternalGPIOPin *gdo2, InternalGPIOPin *reset,
+      void add_sx1262(InternalGPIOPin *busy, InternalGPIOPin *irq, InternalGPIOPin *reset,
                       double frequency, bool sync_mode) {
-        this->spi_conf_.gdo0 = gdo0;
-        this->spi_conf_.gdo2 = gdo2;
+        this->spi_conf_.busy = busy;
+        this->spi_conf_.irq = irq;
         this->spi_conf_.reset = reset;
         this->frequency_ = frequency;
         this->sync_mode_ = sync_mode;

@@ -536,7 +536,7 @@ namespace wmbus {
                                        spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_200KHZ> {
 
     public:
-      bool init(GPIOPin *gdo0, GPIOPin *gdo2, GPIOPin *reset, float freq, bool syncMode);
+      bool init(GPIOPin *busy, GPIOPin *irq, GPIOPin *reset, float freq, bool syncMode);
       bool task();
       WMbusFrame get_frame();
 
@@ -567,8 +567,8 @@ namespace wmbus {
 
       bool syncMode{false};
 
-      GPIOPin *gdo0{0};
-      GPIOPin *gdo2{0};
+      GPIOPin *busy{0};
+      GPIOPin *irq{0};
       GPIOPin *reset{0};
 
       WMbusData data_in{0}; // Data from Physical layer decoded to bytes
