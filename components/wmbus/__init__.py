@@ -29,6 +29,7 @@ from esphome.const import (
     CONF_RETAIN,
     CONF_RESET_PIN,
     CONF_DEVICE,
+    CONF_DUMMY,
 )
 
 from esphome.const import SOURCE_FILE_EXTENSIONS
