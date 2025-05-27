@@ -272,8 +272,8 @@ namespace wmbus {
   void RxLoop::resetDevice() {
     // Reset device
     uint32_t i;
-    i = 10;
-    while (1 > 0) {
+    i = 100;
+    while (i > 0) {
     delay(10);
     this->reset->digital_write(true);
     delay(10);
