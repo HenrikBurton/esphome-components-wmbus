@@ -65,7 +65,7 @@ namespace wmbus {
 
         // RX active, waiting for SYNC
         case WAIT_FOR_SYNC:
-          if (this->gdo2->digital_read()) {
+          if (this->irq->digital_read()) {
             if (getIrqStatus() & RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID) { // assert when SYNC detected
                 clearIrqStatus(RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
                 rxLoop.state = WAIT_FOR_DATA;
@@ -76,7 +76,7 @@ namespace wmbus {
 
         // waiting for enough data in Rx FIFO buffer
         case WAIT_FOR_DATA:
-          if (this->gdo2->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
+          if (this->irq->digital_read() && (getIrqStatus() & RADIOLIB_SX126X_IRQ_RX_DONE)) { // assert when Rx FIFO buffer threshold reached
             clearIrqStatus(RADIOLIB_SX126X_IRQ_RX_DONE | RADIOLIB_SX126X_IRQ_SYNC_WORD_VALID);
             uint8_t bytesInFIFO = getRxPayloadLength();
             if (bytesInFIFO < 3) {
