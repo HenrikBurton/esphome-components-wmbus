@@ -56,7 +56,6 @@ namespace wmbus {
   }
 
   bool RxLoop::task() {
-    return false;
     do {
       switch (rxLoop.state) {
         case INIT_RX:
