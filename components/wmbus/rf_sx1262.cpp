@@ -221,9 +221,9 @@ namespace wmbus {
     if (!force) {
       if (!reinit_needed) {
         // already in RX?
-        if ((getStatus() & 0x70) == RADIOLIB_SX126X_STATUS_MODE_RX) {
+        //if ((getStatus() & 0x70) == RADIOLIB_SX126X_STATUS_MODE_RX) {
           return false;
-        }
+        //}
       }
     }
     // init RX here, each time we're idle
