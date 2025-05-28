@@ -577,7 +577,7 @@ namespace wmbus {
       RxLoopData rxLoop;
 
       uint32_t sync_time_{0};
-      uint32_t extra_time_{1000};
+      uint32_t extra_time_{5000};
       uint32_t max_wait_time_ = extra_time_;
   };
 
