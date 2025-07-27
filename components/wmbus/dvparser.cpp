@@ -1233,7 +1233,7 @@ bool parseDV(Telegram* t,
             (*format)++;
         }
 
-
+debug("[DVPARSER]");
         int difenr = 0;
         int subunit = 0;
         int tariff = 0;
@@ -1273,7 +1273,7 @@ bool parseDV(Telegram* t,
             has_another_dife = (dife & 0x80) == 0x80;
             difenr++;
         }
-
+debug("[DVPARSER]");
         if (*format == format_end) { debug("(dvparser) warning: unexpected end of data (vif expected)"); break; }
 
         uchar vif = **format;
@@ -1306,7 +1306,7 @@ bool parseDV(Telegram* t,
             full_vif <<= 8;
             extension_vif = true;
         }
-
+debug("[DVPARSER]");
         // Grabbing a variable length vif. This does not currently work
         // with the compact format.
         if (vif == 0x7c)
@@ -1330,7 +1330,7 @@ bool parseDV(Telegram* t,
                 id_bytes.push_back(v);
             }
         }
-
+debug("[DVPARSER]");
         // Do we have another vife byte? We better have one, if extension_vif is true.
         bool has_another_vife = (vif & 0x80) == 0x80;
         while (has_another_vife)
@@ -1413,7 +1413,7 @@ bool parseDV(Telegram* t,
                 }
             }
         }
-
+debug("[DVPARSER]");
         dv = "";
         for (uchar c : id_bytes) {
             char hex[3];
@@ -1438,7 +1438,7 @@ bool parseDV(Telegram* t,
             debug("(dvparser) warning: unexpected end of data");
             break;
         }
-
+debug("[DVPARSER]");
         if (variable_length) {
             DEBUG_PARSER("(dvparser debug) varlen %02x", *(data + 0));
             datalen = *(data);
@@ -1473,7 +1473,7 @@ bool parseDV(Telegram* t,
         {
             debug("[DVPARSER] entry %s", dve->dif_vif_key.str().c_str());
         }
-
+debug("[DVPARSER]");
         assert(key == dve->dif_vif_key.str());
 
         if (value.length() > 0) {
@@ -1496,7 +1496,7 @@ bool parseDV(Telegram* t,
             debug("(dvparser) found new format \"%s\" with hash %x, remembering!", format_string.c_str(), hash);
         }
     }
-
+debug("[DVPARSER]");
     return true;
 }
 
