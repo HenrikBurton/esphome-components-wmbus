@@ -1167,7 +1167,7 @@ bool parseDV(Telegram* t,
 
             if (index >= force_mfct_index)
             {
-                DEBUG_PARSER("(dvparser) manufacturer specific data, parsing is done.", dif);
+                DEBUG_PARSER("(dvparser) manufacturer specific data, parsing is done.");
                 size_t datalen = std::distance(data, data_end);
                 string value = bin2hex(data, data_end, datalen);
                 t->addExplanationAndIncrementPos(data, datalen, KindOfData::CONTENT, Understanding::NONE, "manufacturer specific data %s", value.c_str());
