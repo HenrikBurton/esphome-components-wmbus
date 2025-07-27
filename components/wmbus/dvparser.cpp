@@ -1426,10 +1426,11 @@ debug("[DVPARSER]");
         int count = ++dv_count[dv];
 debug("[DVPARSER] dv = %s, count = %d", dv.c_str(), count);
         if (count > 1) {
+debug("[DVPARSER] %08X", key);
             strprintf(&key, "%s_%d", dv.c_str(), count);
         }
         else {
-debug("[DVPARSER]");
+debug("[DVPARSER] %08X", key);
             strprintf(&key, "%s", dv.c_str());
         }
 debug("[DVPARSER]");
