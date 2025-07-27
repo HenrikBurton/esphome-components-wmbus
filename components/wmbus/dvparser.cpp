@@ -1425,9 +1425,11 @@ debug("[DVPARSER]");
 
         int count = ++dv_count[dv];
         if (count > 1) {
+debug("[DVPARSER]");
             strprintf(&key, "%s_%d", dv.c_str(), count);
         }
         else {
+debug("[DVPARSER]");
             strprintf(&key, "%s", dv.c_str());
         }
         DEBUG_PARSER("(dvparser debug) DifVif key is %s", key.c_str());
