@@ -28,8 +28,8 @@
 // The parser should not crash on invalid data, but yeah, when I
 // need to debug it because it crashes on invalid data, then
 // I enable the following define...
-//#define DEBUG_PARSER(...) fprintf(stdout, __VA_ARGS__)
-#define DEBUG_PARSER(...)
+#define DEBUG_PARSER(...) fprintf(stdout, __VA_ARGS__)
+//#define DEBUG_PARSER(...)
 
 using namespace std;
 
