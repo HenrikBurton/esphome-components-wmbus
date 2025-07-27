@@ -1415,7 +1415,6 @@ debug("[DVPARSER]");
         }
 debug("[DVPARSER]");
         dv = "";
-        key ="";
         for (uchar c : id_bytes) {
             char hex[3];
             hex[2] = 0;
