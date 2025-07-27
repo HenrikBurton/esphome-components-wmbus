@@ -1425,7 +1425,7 @@ debug("[DVPARSER]");
 
         int count = ++dv_count[dv];
         if (count > 1) {
-debug("[DVPARSER]");
+debug("[DVPARSER] count = %d", count);
             strprintf(&key, "%s_%d", dv.c_str(), count);
         }
         else {
