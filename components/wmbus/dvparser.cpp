@@ -1434,7 +1434,7 @@ debug("[DVPARSER] %08X", &key);
             strprintf(&key, "%s", dv.c_str());
         }
 debug("[DVPARSER]");
-        DEBUG_PARSER("(dvparser debug) DifVif key is %s", key.c_str());
+        DEBUG_PARSER("(dvparser debug) DifVif key is %s", ""); //key.c_str());
 
         int remaining = std::distance(data, data_end);
         if (remaining < 1)
