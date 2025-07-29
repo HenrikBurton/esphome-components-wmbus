@@ -1480,7 +1480,7 @@ debug("[DVPARSER]");
             debug("[DVPARSER] entry %s", dve->dif_vif_key.str().c_str());
         }
 debug("[DVPARSER]");
-        assert(key == dve->dif_vif_key.str());
+        assert(key == dve->dif_vif_key.str().c_str());
 
         if (value.length() > 0) {
             // This call increments data with datalen.
